@@ -94,9 +94,12 @@ const Drafts = () => {
   )
 }
 
-Drafts.Layout = ({ children }: { children: ReactNode }) => (
+const DraftsLayout = ({ children }: { children: ReactNode }) => (
   <WorkspaceLayout editorDefaultMode="DRAFT">{children}</WorkspaceLayout>
 )
+DraftsLayout.displayName = 'DraftsLayout'
+
+Drafts.Layout = DraftsLayout
 
 export default Drafts
 
