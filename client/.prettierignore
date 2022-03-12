@@ -1,0 +1,5 @@
+.next
+.gitlab-ci.yml
+yarn.lock
+manifest.json
+./types/graphql/schema.ts

@@ -1,0 +1,17 @@
+schema: ${NEXT_PUBLIC_API_URL}/graphql
+documents:
+  - '{components,fields,hooks,pages,providers,locale,types,utils,theme,uikit}/**/*.{ts,tsx}'
+generates:
+  types/graphql/schema.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+    config:
+      namingConvention:
+        enumValues: 'change-case#upperCase'
+  hooks/graphql.ts:
+    preset: import-types
+    presetConfig:
+      typesPath: 'types/graphql/schema'
+    plugins:
+      - typescript-react-apollo
