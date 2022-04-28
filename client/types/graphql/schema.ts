@@ -1,11 +1,14 @@
 export type Maybe<T> = T | null
+export type InputMaybe<T> = Maybe<T>
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
 }
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]?: Maybe<T[SubKey]> }
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]: Maybe<T[SubKey]> }
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>
+}
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -29,18 +32,14 @@ export type MediaInput = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  sendToQueue: Post
   removeFromQueue?: Maybe<Scalars['Boolean']>
   reschedule: Array<Maybe<Timeslot>>
   saveAsDraft: Post
-}
-
-export type MutationSendToQueueArgs = {
-  input: SendToQueueInput
+  sendToQueue: Post
 }
 
 export type MutationRemoveFromQueueArgs = {
-  id?: Maybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']>
 }
 
 export type MutationRescheduleArgs = {
@@ -51,34 +50,38 @@ export type MutationSaveAsDraftArgs = {
   input: SaveAsDraftInput
 }
 
+export type MutationSendToQueueArgs = {
+  input: SendToQueueInput
+}
+
 export type News = {
   __typename?: 'News'
   id: Scalars['String']
+  images: Array<Image>
   inQueue: Scalars['Boolean']
   message?: Maybe<Scalars['String']>
   user?: Maybe<User>
-  images: Array<Image>
 }
 
 export type Post = {
   __typename?: 'Post'
-  id: Scalars['String']
-  sentAt?: Maybe<Scalars['ISO8601DateTime']>
-  sourceId: Scalars['String']
   createdAt?: Maybe<Scalars['ISO8601DateTime']>
-  sourceMeta?: Maybe<SourceMeta>
-  timeslot?: Maybe<Timeslot>
+  id: Scalars['String']
   isDraft: Scalars['Boolean']
   scheduledOn?: Maybe<Scalars['ISO8601Date']>
+  sentAt?: Maybe<Scalars['ISO8601DateTime']>
+  sourceId: Scalars['String']
+  sourceMeta?: Maybe<SourceMeta>
+  timeslot?: Maybe<Timeslot>
 }
 
 export type Query = {
   __typename?: 'Query'
+  drafts?: Maybe<Array<Maybe<Post>>>
   feed?: Maybe<Array<Maybe<News>>>
   news?: Maybe<News>
   post: Post
   queue?: Maybe<Array<Maybe<Post>>>
-  drafts?: Maybe<Array<Maybe<Post>>>
   timeslots?: Maybe<Array<Maybe<Timeslot>>>
 }
 
@@ -101,28 +104,28 @@ export type SaveAsDraftInput = {
 }
 
 export type SendToQueueInput = {
+  author?: InputMaybe<Scalars['String']>
+  isDraft?: InputMaybe<Scalars['Boolean']>
+  media?: InputMaybe<Array<InputMaybe<MediaInput>>>
+  scheduledOn?: InputMaybe<Scalars['ISO8601Date']>
   sourceId: Scalars['String']
-  text?: Maybe<Scalars['String']>
-  author?: Maybe<Scalars['String']>
-  media?: Maybe<Array<Maybe<MediaInput>>>
-  isDraft?: Maybe<Scalars['Boolean']>
-  timeslotId?: Maybe<Scalars['String']>
-  scheduledOn?: Maybe<Scalars['ISO8601Date']>
+  text?: InputMaybe<Scalars['String']>
+  timeslotId?: InputMaybe<Scalars['String']>
 }
 
 export type SourceMeta = {
   __typename?: 'SourceMeta'
-  id: Scalars['String']
   author: Scalars['String']
-  text?: Maybe<Scalars['String']>
+  id: Scalars['String']
   media?: Maybe<Array<Maybe<Image>>>
+  text?: Maybe<Scalars['String']>
 }
 
 export type Timeslot = {
   __typename?: 'Timeslot'
   id: Scalars['String']
-  time: Scalars['ISO8601Time']
   posts?: Maybe<Array<Post>>
+  time: Scalars['ISO8601Time']
 }
 
 export type TimeslotPostsArgs = {
@@ -134,19 +137,55 @@ export type User = {
   name: Scalars['String']
 }
 
+export type GetDraftsForEditorQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetDraftsForEditorQuery = {
+  __typename?: 'Query'
+  drafts?: Array<{
+    __typename?: 'Post'
+    id: string
+    createdAt?: any | null
+    sourceMeta?: {
+      __typename?: 'SourceMeta'
+      id: string
+      text?: string | null
+      media?: Array<{ __typename?: 'Image'; src: string } | null> | null
+    } | null
+  } | null> | null
+}
+
 export type GetPostQueryVariables = Exact<{
   id: Scalars['String']
 }>
 
 export type GetPostQuery = {
   __typename?: 'Query'
-  news?: Maybe<{
+  news?: {
     __typename?: 'News'
     id: string
     inQueue: boolean
     images: Array<{ __typename?: 'Image'; src: string }>
-    user?: Maybe<{ __typename?: 'User'; name: string }>
-  }>
+    user?: { __typename?: 'User'; name: string } | null
+  } | null
+}
+
+export type ReschedulePostFromDraftsInEditorMutationVariables = Exact<{
+  input: RescheduleInput
+  date: Scalars['ISO8601Date']
+}>
+
+export type ReschedulePostFromDraftsInEditorMutation = {
+  __typename?: 'Mutation'
+  reschedule: Array<{
+    __typename?: 'Timeslot'
+    id: string
+    posts?: Array<{
+      __typename?: 'Post'
+      id: string
+      scheduledOn?: any | null
+      timeslot?: { __typename?: 'Timeslot'; id: string; time: any } | null
+    }> | null
+  } | null>
 }
 
 export type ReloadQueueAfterPostCreationQueryVariables = Exact<{
@@ -155,39 +194,35 @@ export type ReloadQueueAfterPostCreationQueryVariables = Exact<{
 
 export type ReloadQueueAfterPostCreationQuery = {
   __typename?: 'Query'
-  timeslots?: Maybe<
-    Array<
-      Maybe<{
-        __typename?: 'Timeslot'
+  timeslots?: Array<{
+    __typename?: 'Timeslot'
+    id: string
+    time: any
+    posts?: Array<{
+      __typename?: 'Post'
+      id: string
+      sentAt?: any | null
+      sourceId: string
+      createdAt?: any | null
+      sourceMeta?: {
+        __typename?: 'SourceMeta'
+        text?: string | null
         id: string
-        time: any
-        posts?: Maybe<
-          Array<{
-            __typename?: 'Post'
-            id: string
-            sentAt?: Maybe<any>
-            sourceId: string
-            createdAt?: Maybe<any>
-            sourceMeta?: Maybe<{
-              __typename?: 'SourceMeta'
-              text?: Maybe<string>
-              id: string
-              media?: Maybe<Array<Maybe<{ __typename?: 'Image'; src: string }>>>
-            }>
-          }>
-        >
-      }>
-    >
-  >
+        media?: Array<{ __typename?: 'Image'; src: string } | null> | null
+      } | null
+    }> | null
+  } | null> | null
 }
 
 export type GetTimeslotsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetTimeslotsQuery = {
   __typename?: 'Query'
-  timeslots?: Maybe<
-    Array<Maybe<{ __typename?: 'Timeslot'; id: string; time: any }>>
-  >
+  timeslots?: Array<{
+    __typename?: 'Timeslot'
+    id: string
+    time: any
+  } | null> | null
 }
 
 export type SendToQueueFromEditorMutationVariables = Exact<{
@@ -199,7 +234,7 @@ export type SendToQueueFromEditorMutation = {
   sendToQueue: {
     __typename?: 'Post'
     id: string
-    scheduledOn?: Maybe<any>
+    scheduledOn?: any | null
     isDraft: boolean
   }
 }
@@ -207,8 +242,8 @@ export type SendToQueueFromEditorMutation = {
 export type PostMediaFragment = {
   __typename?: 'SourceMeta'
   id: string
-  text?: Maybe<string>
-  media?: Maybe<Array<Maybe<{ __typename?: 'Image'; src: string }>>>
+  text?: string | null
+  media?: Array<{ __typename?: 'Image'; src: string } | null> | null
 }
 
 export type GetDataToRescheduleQueryVariables = Exact<{
@@ -217,14 +252,16 @@ export type GetDataToRescheduleQueryVariables = Exact<{
 
 export type GetDataToRescheduleQuery = {
   __typename?: 'Query'
-  timeslots?: Maybe<
-    Array<Maybe<{ __typename?: 'Timeslot'; id: string; time: any }>>
-  >
+  timeslots?: Array<{
+    __typename?: 'Timeslot'
+    id: string
+    time: any
+  } | null> | null
   post: {
     __typename?: 'Post'
     id: string
-    scheduledOn?: Maybe<any>
-    timeslot?: Maybe<{ __typename?: 'Timeslot'; id: string; time: any }>
+    scheduledOn?: any | null
+    timeslot?: { __typename?: 'Timeslot'; id: string; time: any } | null
   }
 }
 
@@ -236,28 +273,22 @@ export type ReschedulePostMutationVariables = Exact<{
 
 export type ReschedulePostMutation = {
   __typename?: 'Mutation'
-  reschedule: Array<
-    Maybe<{
-      __typename?: 'Timeslot'
+  reschedule: Array<{
+    __typename?: 'Timeslot'
+    id: string
+    currentDayPosts?: Array<{
+      __typename?: 'Post'
       id: string
-      currentDayPosts?: Maybe<
-        Array<{
-          __typename?: 'Post'
-          id: string
-          scheduledOn?: Maybe<any>
-          timeslot?: Maybe<{ __typename?: 'Timeslot'; id: string; time: any }>
-        }>
-      >
-      anotherDayPosts?: Maybe<
-        Array<{
-          __typename?: 'Post'
-          id: string
-          scheduledOn?: Maybe<any>
-          timeslot?: Maybe<{ __typename?: 'Timeslot'; id: string; time: any }>
-        }>
-      >
-    }>
-  >
+      scheduledOn?: any | null
+      timeslot?: { __typename?: 'Timeslot'; id: string; time: any } | null
+    }> | null
+    anotherDayPosts?: Array<{
+      __typename?: 'Post'
+      id: string
+      scheduledOn?: any | null
+      timeslot?: { __typename?: 'Timeslot'; id: string; time: any } | null
+    }> | null
+  } | null>
 }
 
 export type ReschedulePostFromDraftsMutationVariables = Exact<{
@@ -267,20 +298,16 @@ export type ReschedulePostFromDraftsMutationVariables = Exact<{
 
 export type ReschedulePostFromDraftsMutation = {
   __typename?: 'Mutation'
-  reschedule: Array<
-    Maybe<{
-      __typename?: 'Timeslot'
+  reschedule: Array<{
+    __typename?: 'Timeslot'
+    id: string
+    posts?: Array<{
+      __typename?: 'Post'
       id: string
-      posts?: Maybe<
-        Array<{
-          __typename?: 'Post'
-          id: string
-          scheduledOn?: Maybe<any>
-          timeslot?: Maybe<{ __typename?: 'Timeslot'; id: string; time: any }>
-        }>
-      >
-    }>
-  >
+      scheduledOn?: any | null
+      timeslot?: { __typename?: 'Timeslot'; id: string; time: any } | null
+    }> | null
+  } | null>
 }
 
 export type GetQueueQueryVariables = Exact<{
@@ -289,32 +316,26 @@ export type GetQueueQueryVariables = Exact<{
 
 export type GetQueueQuery = {
   __typename?: 'Query'
-  timeslots?: Maybe<
-    Array<
-      Maybe<{
-        __typename?: 'Timeslot'
+  timeslots?: Array<{
+    __typename?: 'Timeslot'
+    id: string
+    time: any
+    posts?: Array<{
+      __typename?: 'Post'
+      id: string
+      sentAt?: any | null
+      sourceId: string
+      createdAt?: any | null
+      scheduledOn?: any | null
+      timeslot?: { __typename?: 'Timeslot'; id: string; time: any } | null
+      sourceMeta?: {
+        __typename?: 'SourceMeta'
         id: string
-        time: any
-        posts?: Maybe<
-          Array<{
-            __typename?: 'Post'
-            id: string
-            sentAt?: Maybe<any>
-            sourceId: string
-            createdAt?: Maybe<any>
-            scheduledOn?: Maybe<any>
-            timeslot?: Maybe<{ __typename?: 'Timeslot'; id: string; time: any }>
-            sourceMeta?: Maybe<{
-              __typename?: 'SourceMeta'
-              id: string
-              text?: Maybe<string>
-              media?: Maybe<Array<Maybe<{ __typename?: 'Image'; src: string }>>>
-            }>
-          }>
-        >
-      }>
-    >
-  >
+        text?: string | null
+        media?: Array<{ __typename?: 'Image'; src: string } | null> | null
+      } | null
+    }> | null
+  } | null> | null
 }
 
 export type ReschedulePostOnDropMutationVariables = Exact<{
@@ -324,21 +345,17 @@ export type ReschedulePostOnDropMutationVariables = Exact<{
 
 export type ReschedulePostOnDropMutation = {
   __typename?: 'Mutation'
-  reschedule: Array<
-    Maybe<{
-      __typename?: 'Timeslot'
+  reschedule: Array<{
+    __typename?: 'Timeslot'
+    id: string
+    currentDayPosts?: Array<{
+      __typename?: 'Post'
       id: string
-      currentDayPosts?: Maybe<
-        Array<{
-          __typename?: 'Post'
-          id: string
-          scheduledOn?: Maybe<any>
-          sentAt?: Maybe<any>
-          timeslot?: Maybe<{ __typename?: 'Timeslot'; id: string; time: any }>
-        }>
-      >
-    }>
-  >
+      scheduledOn?: any | null
+      sentAt?: any | null
+      timeslot?: { __typename?: 'Timeslot'; id: string; time: any } | null
+    }> | null
+  } | null>
 }
 
 export type MoveToDraftsFromQueueMutationVariables = Exact<{
@@ -354,21 +371,17 @@ export type GetDraftsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetDraftsQuery = {
   __typename?: 'Query'
-  drafts?: Maybe<
-    Array<
-      Maybe<{
-        __typename?: 'Post'
-        id: string
-        createdAt?: Maybe<any>
-        sourceMeta?: Maybe<{
-          __typename?: 'SourceMeta'
-          id: string
-          text?: Maybe<string>
-          media?: Maybe<Array<Maybe<{ __typename?: 'Image'; src: string }>>>
-        }>
-      }>
-    >
-  >
+  drafts?: Array<{
+    __typename?: 'Post'
+    id: string
+    createdAt?: any | null
+    sourceMeta?: {
+      __typename?: 'SourceMeta'
+      id: string
+      text?: string | null
+      media?: Array<{ __typename?: 'Image'; src: string } | null> | null
+    } | null
+  } | null> | null
 }
 
 export type RemoveFromQueueMutationVariables = Exact<{
@@ -377,23 +390,19 @@ export type RemoveFromQueueMutationVariables = Exact<{
 
 export type RemoveFromQueueMutation = {
   __typename?: 'Mutation'
-  removeFromQueue?: Maybe<boolean>
+  removeFromQueue?: boolean | null
 }
 
 export type GetPostsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetPostsQuery = {
   __typename?: 'Query'
-  feed?: Maybe<
-    Array<
-      Maybe<{
-        __typename?: 'News'
-        id: string
-        inQueue: boolean
-        message?: Maybe<string>
-        user?: Maybe<{ __typename?: 'User'; name: string }>
-        images: Array<{ __typename?: 'Image'; src: string }>
-      }>
-    >
-  >
+  feed?: Array<{
+    __typename?: 'News'
+    id: string
+    inQueue: boolean
+    message?: string | null
+    user?: { __typename?: 'User'; name: string } | null
+    images: Array<{ __typename?: 'Image'; src: string }>
+  } | null> | null
 }

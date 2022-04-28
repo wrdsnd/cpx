@@ -21,7 +21,7 @@ import {
 import { FaPlus, FaRegCalendarAlt, FaArchive } from 'react-icons/fa'
 import { DateTime } from 'luxon'
 import { useDrag, useDrop, DragObjectWithType } from 'react-dnd'
-import { Postcard, Status, Spacer, EditorModal } from 'components'
+import { Postcard, Status, Spacer, PostEditorModal } from 'components'
 import { PostModal } from 'components/PostModal'
 import { ImagePreview } from 'components/Postcard/ImagePreview'
 import { ActionIconButton } from 'components/Postcard/ActionIconButton'
@@ -314,7 +314,7 @@ export const Timetable = ({ selectedDate }: { selectedDate: DateTime }) => {
           return (
             <Box mb={10} key={index}>
               {postModal.isOpen && timeslot.id === activeTimeslotId && (
-                <EditorModal
+                <PostEditorModal
                   isOpen
                   initialTimelotId={timeslot.id}
                   initialDate={selectedDate.toISODate()}

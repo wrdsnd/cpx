@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import gql from 'graphql-tag'
 import { Flex, Box, Grid } from '@chakra-ui/react'
-import { Postcard, Lightbox, Spacer, EditorModal, Status } from 'components'
+import { Postcard, Lightbox, Spacer, PostEditorModal, Status } from 'components'
 import Head from 'next/head'
 import { ImagePreview } from 'components/Postcard/ImagePreview'
 import { SourceLink } from 'components/Postcard/SourceLink'
@@ -61,7 +61,7 @@ const Feed = () => {
         <title>Feed</title>
       </Head>
       {modalIsOpen && (
-        <EditorModal
+        <PostEditorModal
           isDraft={false}
           isOpen={modalIsOpen}
           initialSourceUrl={sourceUrl}

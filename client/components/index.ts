@@ -1,7 +1,7 @@
 export { Postcard } from './Postcard'
 export { Spacer } from './Spacer'
 export * as Status from './Status'
-export { EditorModal } from './EditorModal'
+export { PostEditorModal } from './PostEditorModal'
 export { Lightbox } from './Lightbox'
 export { TimeslotField } from './TimeslotField'
 export { Timetable } from './Timetable'

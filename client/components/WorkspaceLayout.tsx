@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { Container, useDisclosure } from '@chakra-ui/react'
 import { Spacer } from './Spacer'
-import { EditorModal } from './EditorModal'
+import { PostEditorModal } from './PostEditorModal'
 import { Topbar } from './Topbar'
 
 type Props = {
@@ -21,7 +21,7 @@ export const WorkspaceLayout = ({
   return (
     <Container width="100%" maxW={1060} px={4} margin="0 auto">
       {isEditorOpen && (
-        <EditorModal
+        <PostEditorModal
           isDraft={editorDefaultMode === 'DRAFT'}
           isOpen={isEditorOpen}
           onClose={onEditorClose}

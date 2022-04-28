@@ -35,7 +35,7 @@ gql`
   }
 `
 
-const Drafts = () => {
+const DraftsPage = () => {
   const { loading, error, data, refetch } = useGetDraftsQuery({
     fetchPolicy: 'cache-and-network',
   })
@@ -94,14 +94,11 @@ const Drafts = () => {
   )
 }
 
-const DraftsLayout = ({ children }: { children: ReactNode }) => (
+DraftsPage.Layout = ({ children }: { children: ReactNode }) => (
   <WorkspaceLayout editorDefaultMode="DRAFT">{children}</WorkspaceLayout>
 )
-DraftsLayout.displayName = 'DraftsLayout'
 
-Drafts.Layout = DraftsLayout
-
-export default Drafts
+export default DraftsPage
 
 type DraftsGridProps = {
   drafts: GetDraftsQuery['drafts']

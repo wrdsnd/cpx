@@ -2,7 +2,7 @@ import * as Types from 'types/graphql/schema'
 
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
-const defaultOptions = {}
+const defaultOptions = {} as const
 export const PostMediaFragmentDoc = gql`
   fragment PostMedia on SourceMeta {
     id
@@ -12,6 +12,71 @@ export const PostMediaFragmentDoc = gql`
     text
   }
 `
+export const GetDraftsForEditorDocument = gql`
+  query GetDraftsForEditor {
+    drafts {
+      id
+      createdAt
+      sourceMeta {
+        id
+        media {
+          src
+        }
+        text
+      }
+    }
+  }
+`
+
+/**
+ * __useGetDraftsForEditorQuery__
+ *
+ * To run a query within a React component, call `useGetDraftsForEditorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDraftsForEditorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDraftsForEditorQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetDraftsForEditorQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    Types.GetDraftsForEditorQuery,
+    Types.GetDraftsForEditorQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    Types.GetDraftsForEditorQuery,
+    Types.GetDraftsForEditorQueryVariables
+  >(GetDraftsForEditorDocument, options)
+}
+export function useGetDraftsForEditorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.GetDraftsForEditorQuery,
+    Types.GetDraftsForEditorQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    Types.GetDraftsForEditorQuery,
+    Types.GetDraftsForEditorQueryVariables
+  >(GetDraftsForEditorDocument, options)
+}
+export type GetDraftsForEditorQueryHookResult = ReturnType<
+  typeof useGetDraftsForEditorQuery
+>
+export type GetDraftsForEditorLazyQueryHookResult = ReturnType<
+  typeof useGetDraftsForEditorLazyQuery
+>
+export type GetDraftsForEditorQueryResult = Apollo.QueryResult<
+  Types.GetDraftsForEditorQuery,
+  Types.GetDraftsForEditorQueryVariables
+>
 export const GetPostDocument = gql`
   query GetPost($id: String!) {
     news(id: $id) {
@@ -73,6 +138,70 @@ export type GetPostQueryResult = Apollo.QueryResult<
   Types.GetPostQuery,
   Types.GetPostQueryVariables
 >
+export const ReschedulePostFromDraftsInEditorDocument = gql`
+  mutation ReschedulePostFromDraftsInEditor(
+    $input: RescheduleInput!
+    $date: ISO8601Date!
+  ) {
+    reschedule(input: $input) {
+      id
+      posts(date: $date) {
+        id
+        scheduledOn
+        timeslot {
+          id
+          time
+        }
+      }
+    }
+  }
+`
+export type ReschedulePostFromDraftsInEditorMutationFn =
+  Apollo.MutationFunction<
+    Types.ReschedulePostFromDraftsInEditorMutation,
+    Types.ReschedulePostFromDraftsInEditorMutationVariables
+  >
+
+/**
+ * __useReschedulePostFromDraftsInEditorMutation__
+ *
+ * To run a mutation, you first call `useReschedulePostFromDraftsInEditorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReschedulePostFromDraftsInEditorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reschedulePostFromDraftsInEditorMutation, { data, loading, error }] = useReschedulePostFromDraftsInEditorMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function useReschedulePostFromDraftsInEditorMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.ReschedulePostFromDraftsInEditorMutation,
+    Types.ReschedulePostFromDraftsInEditorMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    Types.ReschedulePostFromDraftsInEditorMutation,
+    Types.ReschedulePostFromDraftsInEditorMutationVariables
+  >(ReschedulePostFromDraftsInEditorDocument, options)
+}
+export type ReschedulePostFromDraftsInEditorMutationHookResult = ReturnType<
+  typeof useReschedulePostFromDraftsInEditorMutation
+>
+export type ReschedulePostFromDraftsInEditorMutationResult =
+  Apollo.MutationResult<Types.ReschedulePostFromDraftsInEditorMutation>
+export type ReschedulePostFromDraftsInEditorMutationOptions =
+  Apollo.BaseMutationOptions<
+    Types.ReschedulePostFromDraftsInEditorMutation,
+    Types.ReschedulePostFromDraftsInEditorMutationVariables
+  >
 export const ReloadQueueAfterPostCreationDocument = gql`
   query ReloadQueueAfterPostCreation($date: ISO8601Date!) {
     timeslots {
@@ -249,7 +378,8 @@ export function useSendToQueueFromEditorMutation(
 export type SendToQueueFromEditorMutationHookResult = ReturnType<
   typeof useSendToQueueFromEditorMutation
 >
-export type SendToQueueFromEditorMutationResult = Apollo.MutationResult<Types.SendToQueueFromEditorMutation>
+export type SendToQueueFromEditorMutationResult =
+  Apollo.MutationResult<Types.SendToQueueFromEditorMutation>
 export type SendToQueueFromEditorMutationOptions = Apollo.BaseMutationOptions<
   Types.SendToQueueFromEditorMutation,
   Types.SendToQueueFromEditorMutationVariables
@@ -387,7 +517,8 @@ export function useReschedulePostMutation(
 export type ReschedulePostMutationHookResult = ReturnType<
   typeof useReschedulePostMutation
 >
-export type ReschedulePostMutationResult = Apollo.MutationResult<Types.ReschedulePostMutation>
+export type ReschedulePostMutationResult =
+  Apollo.MutationResult<Types.ReschedulePostMutation>
 export type ReschedulePostMutationOptions = Apollo.BaseMutationOptions<
   Types.ReschedulePostMutation,
   Types.ReschedulePostMutationVariables
@@ -448,11 +579,13 @@ export function useReschedulePostFromDraftsMutation(
 export type ReschedulePostFromDraftsMutationHookResult = ReturnType<
   typeof useReschedulePostFromDraftsMutation
 >
-export type ReschedulePostFromDraftsMutationResult = Apollo.MutationResult<Types.ReschedulePostFromDraftsMutation>
-export type ReschedulePostFromDraftsMutationOptions = Apollo.BaseMutationOptions<
-  Types.ReschedulePostFromDraftsMutation,
-  Types.ReschedulePostFromDraftsMutationVariables
->
+export type ReschedulePostFromDraftsMutationResult =
+  Apollo.MutationResult<Types.ReschedulePostFromDraftsMutation>
+export type ReschedulePostFromDraftsMutationOptions =
+  Apollo.BaseMutationOptions<
+    Types.ReschedulePostFromDraftsMutation,
+    Types.ReschedulePostFromDraftsMutationVariables
+  >
 export const GetQueueDocument = gql`
   query GetQueue($date: ISO8601Date!) {
     timeslots {
@@ -579,7 +712,8 @@ export function useReschedulePostOnDropMutation(
 export type ReschedulePostOnDropMutationHookResult = ReturnType<
   typeof useReschedulePostOnDropMutation
 >
-export type ReschedulePostOnDropMutationResult = Apollo.MutationResult<Types.ReschedulePostOnDropMutation>
+export type ReschedulePostOnDropMutationResult =
+  Apollo.MutationResult<Types.ReschedulePostOnDropMutation>
 export type ReschedulePostOnDropMutationOptions = Apollo.BaseMutationOptions<
   Types.ReschedulePostOnDropMutation,
   Types.ReschedulePostOnDropMutationVariables
@@ -628,7 +762,8 @@ export function useMoveToDraftsFromQueueMutation(
 export type MoveToDraftsFromQueueMutationHookResult = ReturnType<
   typeof useMoveToDraftsFromQueueMutation
 >
-export type MoveToDraftsFromQueueMutationResult = Apollo.MutationResult<Types.MoveToDraftsFromQueueMutation>
+export type MoveToDraftsFromQueueMutationResult =
+  Apollo.MutationResult<Types.MoveToDraftsFromQueueMutation>
 export type MoveToDraftsFromQueueMutationOptions = Apollo.BaseMutationOptions<
   Types.MoveToDraftsFromQueueMutation,
   Types.MoveToDraftsFromQueueMutationVariables
@@ -738,7 +873,8 @@ export function useRemoveFromQueueMutation(
 export type RemoveFromQueueMutationHookResult = ReturnType<
   typeof useRemoveFromQueueMutation
 >
-export type RemoveFromQueueMutationResult = Apollo.MutationResult<Types.RemoveFromQueueMutation>
+export type RemoveFromQueueMutationResult =
+  Apollo.MutationResult<Types.RemoveFromQueueMutation>
 export type RemoveFromQueueMutationOptions = Apollo.BaseMutationOptions<
   Types.RemoveFromQueueMutation,
   Types.RemoveFromQueueMutationVariables
