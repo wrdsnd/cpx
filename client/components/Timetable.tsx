@@ -251,7 +251,7 @@ export const Timetable = ({ selectedDate }: { selectedDate: DateTime }) => {
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            Are you sure? You can reschedule post from drafts page
+            Are you sure? You can always reschedule post in editor
           </AlertDialogBody>
 
           <AlertDialogFooter>

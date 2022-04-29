@@ -12,8 +12,8 @@ export const PostMediaFragmentDoc = gql`
     text
   }
 `
-export const GetDraftsForEditorDocument = gql`
-  query GetDraftsForEditor {
+export const GetDraftsDocument = gql`
+  query GetDrafts {
     drafts {
       id
       createdAt
@@ -29,53 +29,99 @@ export const GetDraftsForEditorDocument = gql`
 `
 
 /**
- * __useGetDraftsForEditorQuery__
+ * __useGetDraftsQuery__
  *
- * To run a query within a React component, call `useGetDraftsForEditorQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetDraftsForEditorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetDraftsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDraftsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetDraftsForEditorQuery({
+ * const { data, loading, error } = useGetDraftsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetDraftsForEditorQuery(
+export function useGetDraftsQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    Types.GetDraftsForEditorQuery,
-    Types.GetDraftsForEditorQueryVariables
+    Types.GetDraftsQuery,
+    Types.GetDraftsQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<
-    Types.GetDraftsForEditorQuery,
-    Types.GetDraftsForEditorQueryVariables
-  >(GetDraftsForEditorDocument, options)
+  return Apollo.useQuery<Types.GetDraftsQuery, Types.GetDraftsQueryVariables>(
+    GetDraftsDocument,
+    options,
+  )
 }
-export function useGetDraftsForEditorLazyQuery(
+export function useGetDraftsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    Types.GetDraftsForEditorQuery,
-    Types.GetDraftsForEditorQueryVariables
+    Types.GetDraftsQuery,
+    Types.GetDraftsQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<
-    Types.GetDraftsForEditorQuery,
-    Types.GetDraftsForEditorQueryVariables
-  >(GetDraftsForEditorDocument, options)
+    Types.GetDraftsQuery,
+    Types.GetDraftsQueryVariables
+  >(GetDraftsDocument, options)
 }
-export type GetDraftsForEditorQueryHookResult = ReturnType<
-  typeof useGetDraftsForEditorQuery
+export type GetDraftsQueryHookResult = ReturnType<typeof useGetDraftsQuery>
+export type GetDraftsLazyQueryHookResult = ReturnType<
+  typeof useGetDraftsLazyQuery
 >
-export type GetDraftsForEditorLazyQueryHookResult = ReturnType<
-  typeof useGetDraftsForEditorLazyQuery
+export type GetDraftsQueryResult = Apollo.QueryResult<
+  Types.GetDraftsQuery,
+  Types.GetDraftsQueryVariables
 >
-export type GetDraftsForEditorQueryResult = Apollo.QueryResult<
-  Types.GetDraftsForEditorQuery,
-  Types.GetDraftsForEditorQueryVariables
+export const RemoveFromQueueDocument = gql`
+  mutation RemoveFromQueue($id: String!) {
+    removeFromQueue(id: $id)
+  }
+`
+export type RemoveFromQueueMutationFn = Apollo.MutationFunction<
+  Types.RemoveFromQueueMutation,
+  Types.RemoveFromQueueMutationVariables
+>
+
+/**
+ * __useRemoveFromQueueMutation__
+ *
+ * To run a mutation, you first call `useRemoveFromQueueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFromQueueMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFromQueueMutation, { data, loading, error }] = useRemoveFromQueueMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveFromQueueMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    Types.RemoveFromQueueMutation,
+    Types.RemoveFromQueueMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    Types.RemoveFromQueueMutation,
+    Types.RemoveFromQueueMutationVariables
+  >(RemoveFromQueueDocument, options)
+}
+export type RemoveFromQueueMutationHookResult = ReturnType<
+  typeof useRemoveFromQueueMutation
+>
+export type RemoveFromQueueMutationResult =
+  Apollo.MutationResult<Types.RemoveFromQueueMutation>
+export type RemoveFromQueueMutationOptions = Apollo.BaseMutationOptions<
+  Types.RemoveFromQueueMutation,
+  Types.RemoveFromQueueMutationVariables
 >
 export const GetPostDocument = gql`
   query GetPost($id: String!) {
@@ -767,117 +813,6 @@ export type MoveToDraftsFromQueueMutationResult =
 export type MoveToDraftsFromQueueMutationOptions = Apollo.BaseMutationOptions<
   Types.MoveToDraftsFromQueueMutation,
   Types.MoveToDraftsFromQueueMutationVariables
->
-export const GetDraftsDocument = gql`
-  query GetDrafts {
-    drafts {
-      id
-      createdAt
-      sourceMeta {
-        id
-        media {
-          src
-        }
-        text
-      }
-    }
-  }
-`
-
-/**
- * __useGetDraftsQuery__
- *
- * To run a query within a React component, call `useGetDraftsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetDraftsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetDraftsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetDraftsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    Types.GetDraftsQuery,
-    Types.GetDraftsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<Types.GetDraftsQuery, Types.GetDraftsQueryVariables>(
-    GetDraftsDocument,
-    options,
-  )
-}
-export function useGetDraftsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    Types.GetDraftsQuery,
-    Types.GetDraftsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<
-    Types.GetDraftsQuery,
-    Types.GetDraftsQueryVariables
-  >(GetDraftsDocument, options)
-}
-export type GetDraftsQueryHookResult = ReturnType<typeof useGetDraftsQuery>
-export type GetDraftsLazyQueryHookResult = ReturnType<
-  typeof useGetDraftsLazyQuery
->
-export type GetDraftsQueryResult = Apollo.QueryResult<
-  Types.GetDraftsQuery,
-  Types.GetDraftsQueryVariables
->
-export const RemoveFromQueueDocument = gql`
-  mutation RemoveFromQueue($id: String!) {
-    removeFromQueue(id: $id)
-  }
-`
-export type RemoveFromQueueMutationFn = Apollo.MutationFunction<
-  Types.RemoveFromQueueMutation,
-  Types.RemoveFromQueueMutationVariables
->
-
-/**
- * __useRemoveFromQueueMutation__
- *
- * To run a mutation, you first call `useRemoveFromQueueMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRemoveFromQueueMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [removeFromQueueMutation, { data, loading, error }] = useRemoveFromQueueMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useRemoveFromQueueMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    Types.RemoveFromQueueMutation,
-    Types.RemoveFromQueueMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    Types.RemoveFromQueueMutation,
-    Types.RemoveFromQueueMutationVariables
-  >(RemoveFromQueueDocument, options)
-}
-export type RemoveFromQueueMutationHookResult = ReturnType<
-  typeof useRemoveFromQueueMutation
->
-export type RemoveFromQueueMutationResult =
-  Apollo.MutationResult<Types.RemoveFromQueueMutation>
-export type RemoveFromQueueMutationOptions = Apollo.BaseMutationOptions<
-  Types.RemoveFromQueueMutation,
-  Types.RemoveFromQueueMutationVariables
 >
 export const GetPostsDocument = gql`
   query GetPosts {

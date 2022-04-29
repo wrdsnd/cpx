@@ -39,11 +39,6 @@ export const Topbar = ({ onNewPostClick }: TopbarProps) => {
         },
         isActive: router.pathname === '/queue/[date]',
       },
-      {
-        label: 'Drafts',
-        href: '/drafts',
-        isActive: router.pathname === '/drafts',
-      },
     ],
     [currentDate, router.pathname],
   )

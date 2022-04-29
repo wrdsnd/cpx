@@ -137,9 +137,9 @@ export type User = {
   name: Scalars['String']
 }
 
-export type GetDraftsForEditorQueryVariables = Exact<{ [key: string]: never }>
+export type GetDraftsQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetDraftsForEditorQuery = {
+export type GetDraftsQuery = {
   __typename?: 'Query'
   drafts?: Array<{
     __typename?: 'Post'
@@ -152,6 +152,15 @@ export type GetDraftsForEditorQuery = {
       media?: Array<{ __typename?: 'Image'; src: string } | null> | null
     } | null
   } | null> | null
+}
+
+export type RemoveFromQueueMutationVariables = Exact<{
+  id: Scalars['String']
+}>
+
+export type RemoveFromQueueMutation = {
+  __typename?: 'Mutation'
+  removeFromQueue?: boolean | null
 }
 
 export type GetPostQueryVariables = Exact<{
@@ -365,32 +374,6 @@ export type MoveToDraftsFromQueueMutationVariables = Exact<{
 export type MoveToDraftsFromQueueMutation = {
   __typename?: 'Mutation'
   saveAsDraft: { __typename?: 'Post'; id: string }
-}
-
-export type GetDraftsQueryVariables = Exact<{ [key: string]: never }>
-
-export type GetDraftsQuery = {
-  __typename?: 'Query'
-  drafts?: Array<{
-    __typename?: 'Post'
-    id: string
-    createdAt?: any | null
-    sourceMeta?: {
-      __typename?: 'SourceMeta'
-      id: string
-      text?: string | null
-      media?: Array<{ __typename?: 'Image'; src: string } | null> | null
-    } | null
-  } | null> | null
-}
-
-export type RemoveFromQueueMutationVariables = Exact<{
-  id: Scalars['String']
-}>
-
-export type RemoveFromQueueMutation = {
-  __typename?: 'Mutation'
-  removeFromQueue?: boolean | null
 }
 
 export type GetPostsQueryVariables = Exact<{ [key: string]: never }>

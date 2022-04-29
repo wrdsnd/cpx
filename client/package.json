@@ -12,7 +12,7 @@
     "start": "next start",
     "tsc": "tsc",
     "tsc:watch": "tsc -w",
-    "codegen:generate": "graphql-codegen -r dotenv/config && prettier --write types/graphql/schema.ts hooks/graphql.ts",
+    "graphql:generate": "graphql-codegen -r dotenv/config && prettier --write types/graphql/schema.ts hooks/graphql.ts",
     "prettier:format": "prettier --write ."
   },
   "husky": {
