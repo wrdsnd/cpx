@@ -31,8 +31,8 @@ export const PostModal = ({ onClose, sourceMeta }: Props) => {
         bg={['gray.50', 'white']}
         mt={[0, '8.75rem']}
         mb={[0, '3.75rem']}
-        h={['100vh', 'initial']}
-        rounded="lg"
+        minH={['100vh', 'initial']}
+        rounded={[null, 'lg']}
       >
         <ModalCloseButton right={2} />
         <Spacer h={10} />

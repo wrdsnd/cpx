@@ -104,9 +104,13 @@ export const PostEditorModal = ({
   }
 
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={onClose}>
+    <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent
+        mt={[0, '3.75rem']}
+        minH={['100vh', 'initial']}
+        mb={[0, '3.75rem']}
+      >
         <ModalHeader>New post</ModalHeader>
         <ModalCloseButton right={2} />
         <ModalBody>

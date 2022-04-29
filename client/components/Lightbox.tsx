@@ -88,6 +88,7 @@ export const Lightbox = ({ images = [], children }: Props) => {
           overflow="hidden"
           my={0}
           border="none"
+          height="100vh"
         >
           <ModalHeader color="white" fontSize="xl">
             <Text display="inline" sx={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -137,8 +138,8 @@ export const Lightbox = ({ images = [], children }: Props) => {
                 }}
                 style={{
                   position: 'absolute',
-                  maxWidth: '100vw',
-                  maxHeight: '70%',
+                  maxWidth: '95vw',
+                  maxHeight: '95%',
                 }}
               />
             </AnimatePresence>
