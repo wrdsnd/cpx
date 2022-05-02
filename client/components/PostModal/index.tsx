@@ -56,6 +56,7 @@ export const PostModal = ({ onClose, sourceMeta }: Props) => {
                         rounded="lg"
                         src={image.src}
                         onClick={() => setSelectedImageIndex(index)}
+                        alt=""
                       />
                       {index !== sourceMeta.media.length && (
                         <Spacer flexShrink={0} h={3} w={3} />
@@ -71,7 +72,7 @@ export const PostModal = ({ onClose, sourceMeta }: Props) => {
                 {({ open }) => (
                   <Image
                     w="100%"
-                    onClick={open}
+                    onClick={() => open(selectedImageIndex)}
                     rounded="lg"
                     src={sourceMeta.media[selectedImageIndex].src}
                     objectFit="contain"
@@ -79,6 +80,7 @@ export const PostModal = ({ onClose, sourceMeta }: Props) => {
                     minH="21.25rem"
                     maxH="21.25rem"
                     overflow="hidden"
+                    alt=""
                   />
                 )}
               </Lightbox>

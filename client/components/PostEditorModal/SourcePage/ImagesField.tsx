@@ -49,10 +49,11 @@ export const ImagesField = () => {
                     <Lightbox images={value}>
                       {({ open }) => (
                         <Image
-                          onClick={open}
+                          onClick={() => open(index)}
                           src={image.src}
                           borderRadius="sm"
                           userSelect="none"
+                          alt=""
                         />
                       )}
                     </Lightbox>

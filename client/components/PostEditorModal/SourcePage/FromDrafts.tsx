@@ -91,13 +91,13 @@ export const FromDrafts = ({ onSubmit }: Props) => {
           setIdToDelete(null)
         }}
       />
-      {data.drafts.map((post) => {
+      {data.drafts.map((post, index) => {
         return (
           <Postcard key={post.id}>
             <Lightbox images={post.sourceMeta.media}>
               {({ open }) => (
                 <ImagePreview
-                  onClick={open}
+                  onClick={() => open(index)}
                   src={post.sourceMeta.media[0]?.src}
                 />
               )}

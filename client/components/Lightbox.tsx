@@ -52,13 +52,16 @@ const swipePower = (offset: number, velocity: number) => {
 }
 
 export const Lightbox = ({ images = [], children }: Props) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const handleOpen = () => setIsOpen(true)
-  const handleClose = () => setIsOpen(false)
-
   const scrollIsEnabled = images.length > 1
 
   const [[page, direction], setPage] = useState([0, 0])
+
+  const [isOpen, setIsOpen] = useState(false)
+  const handleOpen = (index: number) => {
+    setPage([index, 0])
+    setIsOpen(true)
+  }
+  const handleClose = () => setIsOpen(false)
 
   // We only have 3 images, but we paginate them absolutely (ie 1, 2, 3, 4, 5...) and
   // then wrap that within 0-2 to find our image ID in the array below. By passing an
