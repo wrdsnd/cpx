@@ -71,6 +71,7 @@ export const FromDrafts = ({ onSubmit }: Props) => {
       templateColumns={[
         'repeat(1, minmax(0, 1fr))',
         'repeat(2, minmax(0, 1fr))',
+        'repeat(3, minmax(0, 1fr))',
       ]}
       gap={10}
     >

@@ -104,7 +104,7 @@ export const PostEditorModal = ({
   }
 
   return (
-    <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+    <Modal size="4xl" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
         mt={[0, '3.75rem']}
