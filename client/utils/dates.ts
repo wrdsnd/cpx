@@ -1,4 +1,5 @@
-import { capitalize, times } from 'lodash'
+import capitalize from 'lodash/capitalize'
+import times from 'lodash/times'
 import { DateTime } from 'luxon'
 
 const addTodayRelatively = (days: DateTime[]): DateTime[] => {

@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 import Head from 'next/head'
 import { DateTime } from 'luxon'
 import { useRouter } from 'next/router'
