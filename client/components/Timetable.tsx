@@ -1,5 +1,5 @@
 import { useRef, useState, ReactNode } from 'react'
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 import { gql } from '@apollo/client'
 import {
   Flex,
