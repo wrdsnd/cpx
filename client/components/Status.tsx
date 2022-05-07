@@ -14,8 +14,7 @@ const spin = keyframes`
 
 export const Loading = () => {
   const [isVisible, setIsVisible] = useState(false)
-  useTimeoutFn(() => setIsVisible(true), 500)
-  console.log(isVisible)
+  useTimeoutFn(() => setIsVisible(true), 100)
 
   if (!isVisible) {
     return <></>
