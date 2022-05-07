@@ -6,6 +6,7 @@ export const ImagePreview = (p: ImageProps) => (
     height="220px"
     rounded="lg"
     objectFit="cover"
+    draggable={false}
     fallbackSrc="https://via.placeholder.com/150"
     {...p}
   />
