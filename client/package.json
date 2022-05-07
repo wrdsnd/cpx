@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "lint": "next lint",
     "build:analyze": "ANALYZE=enabled next build",
     "start": "next start",
     "tsc": "tsc",
