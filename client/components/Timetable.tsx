@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react'
 import { FaPlus, FaRegCalendarAlt, FaArchive } from 'react-icons/fa'
 import { DateTime } from 'luxon'
-import { useDrag, useDrop, DragObjectWithType } from 'react-dnd'
+import { useDrag, useDrop } from 'react-dnd'
 import { Postcard, Status, Spacer, PostEditorModal } from 'components'
 import { PostModal } from 'components/PostModal'
 import { ImagePreview } from 'components/Postcard/ImagePreview'
@@ -78,7 +78,7 @@ gql`
   }
 `
 
-interface DraggablePostCardObject extends DragObjectWithType {
+interface DraggablePostCardObject {
   id: string
   timeslotId: string
   scheduledOn: string
@@ -97,6 +97,7 @@ const DraggablePost = ({
 }: DraggablePostcardEnvelopeProps) => {
   const [, drag] = useDrag({
     canDrag,
+    type: 'post',
     item: { id, timeslotId, scheduledOn, type: 'post' },
   })
 
