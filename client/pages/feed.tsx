@@ -85,7 +85,7 @@ const Feed = () => {
             {({ open }) => (
               <Postcard>
                 <ImagePreview
-                  cursor="pointer"
+                  alt=""
                   onClick={() => open(0)}
                   src={post.images[0]?.src}
                 />
