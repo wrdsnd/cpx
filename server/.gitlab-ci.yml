@@ -1,0 +1,27 @@
+include:
+  - project: "maxcloud/infra"
+    file: "/templates/base.yml"
+  #  - project: "maxcloud/infra"
+  #    file: "/templates/add-tag.yml"
+  - project: "maxcloud/infra"
+    file: "/templates/docker-build.yml"
+  - project: "maxcloud/infra"
+    file: "/templates/deploy.yml"
+
+stages:
+  - docker-build
+  - deploy
+
+deploy-test:
+  extends: .deploy-test
+  tags:
+    - test
+  only:
+    - master
+  variables:
+    COMPOSE_FILE: deploy/prod/docker-compose.yml
+    CHECK_VERSION_URL: https://api.funthingsare.fun/version
+    STACK_NAME: cpx
+  environment:
+    name: test
+    url: https://api.funthingsare.fun

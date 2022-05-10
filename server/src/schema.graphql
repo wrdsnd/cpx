@@ -1,0 +1,83 @@
+scalar ISO8601Date
+scalar ISO8601DateTime
+scalar ISO8601Time
+
+type Query {
+  feed: [News]
+  news(id: String!): News
+  post(id: String!): Post!
+  queue: [Post]
+  drafts: [Post]
+  timeslots: [Timeslot]
+}
+
+type Mutation {
+  sendToQueue(input: SendToQueueInput!): Post!
+  removeFromQueue(id: String): Boolean
+  reschedule(input: RescheduleInput!): [Timeslot]!
+  saveAsDraft(input: SaveAsDraftInput!): Post!
+}
+
+input SaveAsDraftInput {
+  id: String!
+}
+
+type SourceMeta {
+  id: String!
+  author: String!
+  text: String
+  media: [Image]
+}
+
+type Post {
+  id: String!
+  sentAt: ISO8601DateTime
+  sourceId: String!
+  createdAt: ISO8601DateTime
+  sourceMeta: SourceMeta
+  timeslot: Timeslot
+  isDraft: Boolean!
+  scheduledOn: ISO8601Date
+}
+
+type Timeslot {
+  id: String!
+  time: ISO8601Time!
+  posts(date: ISO8601Date!): [Post!]
+}
+
+type User {
+  name: String!
+}
+
+type Image {
+  src: String!
+}
+
+type News {
+  id: String!
+  inQueue: Boolean!
+  message: String
+  user: User
+  images: [Image!]!
+}
+
+input MediaInput {
+  src: String!
+}
+
+input RescheduleInput {
+  id: String!
+  scheduledOn: ISO8601Date!
+  timeslotId: String!
+}
+
+input SendToQueueInput {
+  sourceId: String!
+  text: String
+  author: String
+  media: [MediaInput]
+  isDraft: Boolean
+  timeslotId: String
+  scheduledOn: ISO8601Date
+}

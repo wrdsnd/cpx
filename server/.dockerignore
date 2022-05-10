@@ -1,0 +1,9 @@
+deploy
+Dockerfile
+.dockerignore
+.env
+.build
+.version
+.gitlab-ci.yml
+node_modules
+.DS_Store

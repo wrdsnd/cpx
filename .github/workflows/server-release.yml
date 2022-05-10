@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+defaults:
+  run:
+    working-directory: ./server
+jobs:
+  build:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install yarn
+        run: npm i -g yarn
+      - name: Install node_modules
+        run: yarn install --frozen-lockfile
+      - name: Build app
+        run: npm run build --if-present
+      - name: Build image
+        uses: redhat-actions/buildah-build@v2
+        id: build_image
+        with:
+          containerfiles: ./server/Dockerfile
+          workdir: ./server
+          image: cpx-server
+      - name: Push To GHCR
+        uses: redhat-actions/push-to-registry@v2
+        id: push-_mage
+        with:
+          image: ${{ steps.build_image.outputs.image }}
+          tags: ${{ steps.build_image.outputs.tags }}
+          registry: ghcr.io/${{ github.repository_owner }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run a new container
+        run: docker-compose -f /srv/cpx/docker-compose.yaml up -d
