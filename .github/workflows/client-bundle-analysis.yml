@@ -1,10 +1,12 @@
-name: "Next.js Bundle Analysis"
+name: "Client: Bundle Analysis"
 
 on:
   pull_request:
   push:
     branches:
-      - main # change this if your default branch is named differently
+      - main
+    paths:
+      - "client/**"
   workflow_dispatch:
 
 defaults:

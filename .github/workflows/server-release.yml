@@ -1,8 +1,10 @@
-name: Release
+name: "Server: Release"
 
 on:
   push:
     branches: [main]
+    paths:
+      - "server/**"
 defaults:
   run:
     working-directory: ./server
