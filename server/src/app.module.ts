@@ -11,6 +11,7 @@ import { QueueModule } from './queue/queue.module'
 import { PublisherModule } from './publisher/publisher.module'
 import { TwitterModule } from './twitter/twitter.module'
 import { DraftsModule } from './drafts/drafts.module'
+import { AuthModule } from './auth/auth.module'
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { DraftsModule } from './drafts/drafts.module'
         },
       },
       typePaths: [join(process.cwd(), 'src/schema.graphql')],
+      context: ({ req, res }) => ({ req, res }),
     }),
     TypeOrmModule.forRoot(),
     DraftsModule,
@@ -36,6 +38,7 @@ import { DraftsModule } from './drafts/drafts.module'
     AnalyzerModule,
     PublisherModule,
     TwitterModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })

@@ -1,8 +1,10 @@
+import { UseGuards } from '@nestjs/common'
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { InjectRepository } from '@nestjs/typeorm'
-import { SaveAsDraftInput } from 'src/graphql'
 import { IsNull, Repository } from 'typeorm'
 import { Post } from '../queue/post.entity'
+import { SaveAsDraftInput } from '../graphql'
+import { AuthGuard } from '../guards'
 
 @Resolver('Drafts')
 export class DraftsResolver {
@@ -11,6 +13,7 @@ export class DraftsResolver {
     private postsRepository: Repository<Post>,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Query()
   async drafts() {
     return this.postsRepository.find({
@@ -19,6 +22,7 @@ export class DraftsResolver {
     })
   }
 
+  @UseGuards(AuthGuard)
   @Mutation()
   async saveAsDraft(@Args('input') input: SaveAsDraftInput) {
     const post = await this.postsRepository.findOne({ id: input.id })

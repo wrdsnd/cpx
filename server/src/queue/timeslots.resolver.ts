@@ -1,5 +1,7 @@
+import { UseGuards } from '@nestjs/common'
 import { Query, ResolveField, Resolver } from '@nestjs/graphql'
 import { InjectRepository } from '@nestjs/typeorm'
+import { AuthGuard } from 'src/guards'
 import { Repository, IsNull } from 'typeorm'
 import { Post } from './post.entity'
 import { Timeslot } from './timeslot.entity'
@@ -13,6 +15,7 @@ export class TimeslotsResolver {
     private postsRepository: Repository<Post>,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Query()
   async timeslots() {
     return this.timeslotsRepository.find({ order: { time: 'ASC' } })

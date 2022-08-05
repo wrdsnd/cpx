@@ -5,6 +5,8 @@ import { Repository, IsNull } from 'typeorm'
 import { Post } from './post.entity'
 import { RescheduleInput, SendToQueueInput } from 'src/graphql'
 import { Timeslot } from './timeslot.entity'
+import { AuthGuard } from '../guards'
+import { UseGuards } from '@nestjs/common'
 
 @Resolver('Queue')
 export class QueueResolver {
@@ -15,6 +17,7 @@ export class QueueResolver {
     private timeslotsRepository: Repository<Timeslot>,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Query()
   async queue() {
     const posts = await this.postsRepository.find({
@@ -34,6 +37,7 @@ export class QueueResolver {
     })
   }
 
+  @UseGuards(AuthGuard)
   @Mutation()
   async sendToQueue(@Args('input') input: SendToQueueInput): Promise<Post> {
     const { sourceId, text, media, scheduledOn, timeslotId, isDraft } = input
@@ -63,6 +67,7 @@ export class QueueResolver {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Mutation()
   async removeFromQueue(@Args('id') id: string) {
     const post = await this.postsRepository.findOne({ id })
@@ -70,6 +75,7 @@ export class QueueResolver {
     return true
   }
 
+  @UseGuards(AuthGuard)
   @Mutation()
   async reschedule(@Args('input') input: RescheduleInput) {
     const { id, scheduledOn, timeslotId } = input

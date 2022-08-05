@@ -1,10 +1,11 @@
 import { Query, Resolver } from '@nestjs/graphql'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { Logger } from '@nestjs/common'
+import { Logger, UseGuards } from '@nestjs/common'
 import { Subscription } from '../subscriptions/subscription.entity'
 import { TwitterService } from '../twitter/twitter.service'
 import { Post } from '../queue/post.entity'
+import { AuthGuard } from '../guards'
 
 @Resolver('Feed')
 export class FeedResolver {
@@ -43,12 +44,13 @@ export class FeedResolver {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Query()
   async feed() {
     const subscriptions = await this.subscriptionsRepository.find()
     const userIds = subscriptions.map((s) => s.userId)
 
-    const tweetsResponses = await Promise.all(
+    const tweetsResponses: any[] = await Promise.all(
       userIds.map((id) =>
         this.twitterService.tweets(id).catch((err) => {
           this.logger.warn(`Error while loading user ${id} tweets`, err)
