@@ -9,8 +9,9 @@ import { ActionIconButton } from 'components/Postcard/ActionIconButton'
 import { TextPreview } from 'components/Postcard/TextPreview'
 import { createTweetUrl } from 'utils/sources'
 import { AddIcon } from '@chakra-ui/icons'
-import { useGetPostsQuery } from 'hooks/graphql'
+import { useGetPostsLazyQuery } from 'hooks/graphql'
 import { WorkspaceLayout } from 'components/WorkspaceLayout'
+import { useAuthAccess } from 'hooks/access'
 
 gql`
   query GetPosts {
@@ -29,17 +30,21 @@ gql`
 `
 
 const Feed = () => {
-  const {
-    loading,
-    error,
-    data = { feed: [] },
-  } = useGetPostsQuery({
-    pollInterval: 40000,
+  const [runGetPostsQuery, { loading, error, data = { feed: [] } }] =
+    useGetPostsLazyQuery({
+      pollInterval: 40000,
+    })
+
+  const [isAuthenticated] = useAuthAccess({
+    onSuccess: () => {
+      runGetPostsQuery()
+    },
   })
+
   const [sourceUrl, setSourceUrl] = useState('')
   const [modalIsOpen, setModalIsOpen] = useState(false)
 
-  if (loading) {
+  if (loading || !isAuthenticated) {
     return (
       <Flex justify="center">
         <Status.Loading />
@@ -49,7 +54,7 @@ const Feed = () => {
 
   if (error) {
     return (
-      <Flex justifyContent="center">
+      <Flex justify="center">
         <Status.Failed />
       </Flex>
     )

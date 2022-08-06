@@ -26,16 +26,31 @@ export type Image = {
   src: Scalars['String']
 }
 
+export type LoginInput = {
+  email: Scalars['String']
+  password: Scalars['String']
+}
+
+export type LoginResult = {
+  __typename?: 'LoginResult'
+  result: Scalars['Boolean']
+}
+
 export type MediaInput = {
   src: Scalars['String']
 }
 
 export type Mutation = {
   __typename?: 'Mutation'
+  login: LoginResult
   removeFromQueue?: Maybe<Scalars['Boolean']>
   reschedule: Array<Maybe<Timeslot>>
   saveAsDraft: Post
   sendToQueue: Post
+}
+
+export type MutationLoginArgs = {
+  input: LoginInput
 }
 
 export type MutationRemoveFromQueueArgs = {
@@ -388,4 +403,13 @@ export type GetPostsQuery = {
     user?: { __typename?: 'User'; name: string } | null
     images: Array<{ __typename?: 'Image'; src: string }>
   } | null> | null
+}
+
+export type LoginMutationVariables = Exact<{
+  input: LoginInput
+}>
+
+export type LoginMutation = {
+  __typename?: 'Mutation'
+  login: { __typename?: 'LoginResult'; result: boolean }
 }

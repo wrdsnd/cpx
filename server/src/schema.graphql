@@ -1,3 +1,5 @@
+directive @auth on QUERY | MUTATION | FIELD_DEFINITION
+
 scalar ISO8601Date
 scalar ISO8601DateTime
 scalar ISO8601Time
@@ -12,10 +14,25 @@ type Query {
 }
 
 type Mutation {
-  sendToQueue(input: SendToQueueInput!): Post!
-  removeFromQueue(id: String): Boolean
-  reschedule(input: RescheduleInput!): [Timeslot]!
-  saveAsDraft(input: SaveAsDraftInput!): Post!
+  sendToQueue(input: SendToQueueInput!): Post! @auth
+  removeFromQueue(id: String): Boolean @auth
+  reschedule(input: RescheduleInput!): [Timeslot]! @auth
+  saveAsDraft(input: SaveAsDraftInput!): Post! @auth
+  login(input: LoginInput!): LoginResult!
+  logout: LogoutResult! @auth
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type LoginResult {
+  result: Boolean!
+}
+
+type LogoutResult {
+  result: Boolean!
 }
 
 input SaveAsDraftInput {

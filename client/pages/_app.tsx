@@ -9,6 +9,7 @@ import { Spacer } from 'components'
 import { ApolloProvider } from '@apollo/client'
 import { client } from 'client'
 import '../styles.css'
+import { UserProvider } from 'providers/User'
 
 type AppPropsWithLayout = AppProps & {
   Component: CpxPageWithLayout
@@ -23,12 +24,14 @@ const CpxApp = ({ Component: Page, pageProps }: AppPropsWithLayout) => {
       <ApolloProvider client={client}>
         <ChakraProvider theme={appTheme}>
           <DndProvider backend={HTML5Backend}>
-            <Box sx={{ height: '100%', minHeight: '100vh' }}>
-              <Layout>
-                <Page {...pageProps} />
-              </Layout>
-              <Spacer height={10} />
-            </Box>
+            <UserProvider>
+              <Box sx={{ height: '100%', minHeight: '100vh' }}>
+                <Layout>
+                  <Page {...pageProps} />
+                </Layout>
+                <Spacer height={10} />
+              </Box>
+            </UserProvider>
           </DndProvider>
         </ChakraProvider>
       </ApolloProvider>

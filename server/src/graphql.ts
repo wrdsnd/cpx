@@ -6,6 +6,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class LoginInput {
+    email: string;
+    password: string;
+}
+
 export class SaveAsDraftInput {
     id: string;
 }
@@ -52,6 +57,18 @@ export abstract class IMutation {
     abstract reschedule(input: RescheduleInput): Timeslot[] | Promise<Timeslot[]>;
 
     abstract saveAsDraft(input: SaveAsDraftInput): Post | Promise<Post>;
+
+    abstract login(input: LoginInput): LoginResult | Promise<LoginResult>;
+
+    abstract logout(): LogoutResult | Promise<LogoutResult>;
+}
+
+export class LoginResult {
+    result: boolean;
+}
+
+export class LogoutResult {
+    result: boolean;
 }
 
 export class SourceMeta {
