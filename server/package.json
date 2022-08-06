@@ -36,7 +36,7 @@
     "graphql-iso-date": "^3.6.1",
     "graphql-tools": "^7.0.1",
     "luxon": "^1.25.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "oauth-1.0a": "^2.2.6",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
