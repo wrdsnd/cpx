@@ -20,16 +20,16 @@ export class PublisherService {
 
   async publish(posts: Post[]) {
     posts.forEach(async (item) => {
-      const media = item.sourceMeta.media || []
+      const media = item.media || []
 
       const formattedMedia = media.map((i) => ({
         type: 'photo',
-        media: i.src,
+        media: i.url,
         caption: undefined,
         parse_mode: 'Markdown',
       }))
 
-      formattedMedia[0].caption = item.sourceMeta.text
+      formattedMedia[0].caption = item.content || ''
 
       const botId = this.configService.get<string>('TELEGRAM_BOT_ID')
       const chatId = this.configService.get<string>('TELEGRAM_CHAT_ID')
@@ -40,10 +40,10 @@ export class PublisherService {
           media: formattedMedia,
         })
 
+        this.postsRepository.update({ id: item.id }, { sentAt: new Date() })
         this.logger.log(`sent ${item.id}`)
-        this.postsRepository.save({ ...item, sentAt: new Date() })
       } catch (e) {
-        this.logger.error(`could not send item ${item.sourceId}`, e)
+        this.logger.error(`could not send item ${item.id}`, e)
       }
     })
   }
@@ -57,8 +57,10 @@ export class PublisherService {
     try {
       const posts = await createQueryBuilder()
         .from(Post, 'post')
+        .relation('media')
         .select('post')
         .leftJoinAndSelect('post.timeslot', 'timeslot')
+        .leftJoinAndSelect('post.media', 'media')
         .andWhere('post.sentAt IS NULL')
         .andWhere('post.deletedAt IS NULL')
         .andWhere('CAST(post."scheduledOn" AS DATE) = :today::date', {

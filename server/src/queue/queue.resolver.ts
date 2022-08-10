@@ -3,18 +3,23 @@ import * as moment from 'moment'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository, IsNull } from 'typeorm'
 import { Post } from './post.entity'
-import { RescheduleInput, SendToQueueInput } from 'src/graphql'
+import * as Schema from 'src/graphql'
 import { Timeslot } from './timeslot.entity'
 import { AuthGuard } from '../guards'
 import { UseGuards } from '@nestjs/common'
+import { Media, Type } from './media.entity'
 
 @Resolver('Queue')
 export class QueueResolver {
   constructor(
     @InjectRepository(Post)
     private postsRepository: Repository<Post>,
+
     @InjectRepository(Timeslot)
     private timeslotsRepository: Repository<Timeslot>,
+
+    @InjectRepository(Media)
+    private mediaRepository: Repository<Media>,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -23,6 +28,7 @@ export class QueueResolver {
     const posts = await this.postsRepository.find({
       where: { sentAt: IsNull(), deletedAt: IsNull() },
       order: { createdAt: 'DESC' },
+      relations: ['media'],
     })
 
     return posts.map((item) => {
@@ -39,8 +45,10 @@ export class QueueResolver {
 
   @UseGuards(AuthGuard)
   @Mutation()
-  async sendToQueue(@Args('input') input: SendToQueueInput): Promise<Post> {
-    const { sourceId, text, media, scheduledOn, timeslotId, isDraft } = input
+  async sendToQueue(
+    @Args('input') input: Schema.SendToQueueInput,
+  ): Promise<Schema.Post> {
+    const { sourceId, scheduledOn, timeslotId, isDraft } = input
 
     const timeslot = await this.timeslotsRepository.findOne({
       where: { id: timeslotId },
@@ -48,22 +56,33 @@ export class QueueResolver {
 
     const post = new Post()
 
+    const media = input.media.map((data) => {
+      const record = new Media()
+      record.url = data.src
+      record.type = Type.IMAGE
+      return record
+    })
+    post.media = media
+    post.content = input.text
+    post.sourceId = sourceId
+
     if (!isDraft) {
       post.timeslot = timeslot
       post.scheduledOn = scheduledOn
     }
     post.sourceId = sourceId
-    post.sourceMeta = {
-      id: sourceId,
-      text,
-      media,
-    }
 
     const savedPost = await this.postsRepository.save(post)
 
     return {
-      ...savedPost,
-      isDraft: post.isDraft,
+      id: savedPost.id,
+      sentAt: savedPost.sentAt,
+      sourceId: savedPost.sourceId,
+      scheduledOn: savedPost.scheduledOn,
+      createdAt: savedPost.createdAt,
+      content: savedPost.content,
+      isDraft: savedPost.isDraft,
+      media,
     }
   }
 
@@ -77,7 +96,7 @@ export class QueueResolver {
 
   @UseGuards(AuthGuard)
   @Mutation()
-  async reschedule(@Args('input') input: RescheduleInput) {
+  async reschedule(@Args('input') input: Schema.RescheduleInput) {
     const { id, scheduledOn, timeslotId } = input
 
     const post = await this.postsRepository.findOneOrFail({ id })

@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm'
+import { Media } from './media.entity'
 import { Timeslot } from './timeslot.entity'
 
 @Entity()
@@ -18,6 +20,9 @@ export class Post {
 
   @Column()
   sourceId: string
+
+  @Column({ nullable: true })
+  content: string
 
   @Column()
   timeslotId: string
@@ -44,4 +49,7 @@ export class Post {
 
   @ManyToOne(() => Timeslot, (timeslot) => timeslot.posts)
   timeslot: Timeslot
+
+  @OneToMany(() => Media, (media) => media.post, { cascade: true })
+  media: Media[]
 }

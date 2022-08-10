@@ -86,7 +86,10 @@ const Feed = () => {
         gap={10}
       >
         {data.feed.map((post, index) => (
-          <Lightbox key={index} images={post.images}>
+          <Lightbox
+            key={index}
+            images={post.images.map((i) => ({ ...i, url: i.src }))}
+          >
             {({ open }) => (
               <Postcard>
                 <ImagePreview

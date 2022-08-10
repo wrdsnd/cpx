@@ -3,13 +3,14 @@ import * as Types from 'types/graphql/schema'
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 const defaultOptions = {} as const
-export const PostMediaFragmentDoc = gql`
-  fragment PostMedia on SourceMeta {
-    id
+export const PostModalDataFragmentDoc = gql`
+  fragment PostModalData on Post {
+    content
     media {
-      src
+      id
+      url
+      createdAt
     }
-    text
   }
 `
 export const GetDraftsDocument = gql`
@@ -17,12 +18,11 @@ export const GetDraftsDocument = gql`
     drafts {
       id
       createdAt
-      sourceMeta {
+      content
+      media {
         id
-        media {
-          src
-        }
-        text
+        url
+        createdAt
       }
     }
   }
@@ -258,12 +258,10 @@ export const ReloadQueueAfterPostCreationDocument = gql`
         sentAt
         sourceId
         createdAt
-        sourceMeta {
-          text
-          media {
-            src
-          }
+        media {
           id
+          url
+          createdAt
         }
       }
     }
@@ -647,13 +645,11 @@ export const GetQueueDocument = gql`
           id
           time
         }
-        sourceMeta {
-          ...PostMedia
-        }
+        ...PostModalData
       }
     }
   }
-  ${PostMediaFragmentDoc}
+  ${PostModalDataFragmentDoc}
 `
 
 /**

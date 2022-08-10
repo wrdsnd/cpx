@@ -24,6 +24,7 @@ export class TimeslotsResolver {
   @ResolveField()
   async posts(timeslot: Timeslot, input: { date: string }) {
     const res = await this.postsRepository.find({
+      relations: ['media'],
       where: {
         timeslotId: timeslot.id,
         scheduledOn: input.date,

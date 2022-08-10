@@ -19,7 +19,7 @@ import { SchedulePage } from './SchedulePage'
 import { SourcePage } from './SourcePage'
 import {
   GetDraftsDocument,
-  GetQueueDocument,
+  ReloadQueueAfterPostCreationDocument,
   useReschedulePostFromDraftsMutation,
   useSendToQueueFromEditorMutation,
 } from 'hooks/graphql'
@@ -85,7 +85,7 @@ export const PostEditorModal = ({
       } else {
         return [
           {
-            query: GetQueueDocument,
+            query: ReloadQueueAfterPostCreationDocument,
             variables: {
               date: data.sendToQueue?.scheduledOn,
             },
@@ -229,12 +229,11 @@ gql`
         sentAt
         sourceId
         createdAt
-        sourceMeta {
-          text
-          media {
-            src
-          }
+        content
+        media {
           id
+          url
+          createdAt
         }
       }
     }

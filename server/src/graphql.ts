@@ -71,19 +71,20 @@ export class LogoutResult {
     result: boolean;
 }
 
-export class SourceMeta {
+export class Media {
     id: string;
-    author: string;
-    text?: string;
-    media?: Image[];
+    url: string;
+    post: Post;
+    createdAt: ISO8601DateTime;
 }
 
 export class Post {
     id: string;
     sentAt?: ISO8601DateTime;
+    content: string;
+    media: Media[];
     sourceId: string;
     createdAt?: ISO8601DateTime;
-    sourceMeta?: SourceMeta;
     timeslot?: Timeslot;
     isDraft: boolean;
     scheduledOn?: ISO8601Date;

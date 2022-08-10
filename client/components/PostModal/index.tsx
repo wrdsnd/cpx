@@ -13,16 +13,16 @@ import {
 import { Spacer } from 'components/Spacer'
 import { Fragment, useState } from 'react'
 import { Lightbox } from 'components/Lightbox'
-import { PostMediaFragment } from 'types/graphql/schema'
 import gql from 'graphql-tag'
+import { PostModalDataFragment } from 'types/graphql/schema'
 
 type Props = {
-  sourceMeta: PostMediaFragment
+  post: PostModalDataFragment
 } & Pick<ModalProps, 'onClose'>
 
-export const PostModal = ({ onClose, sourceMeta }: Props) => {
+export const PostModal = ({ onClose, post }: Props) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
-  const moreThanOneImage = sourceMeta.media.length > 1
+  const moreThanOneImage = post.media.length > 1
 
   return (
     <Modal isOpen onClose={onClose}>
@@ -45,7 +45,7 @@ export const PostModal = ({ onClose, sourceMeta }: Props) => {
                   w="3.75rem"
                   flexDirection={['row', 'column']}
                 >
-                  {sourceMeta.media.map((image, index) => (
+                  {post.media.map((image, index) => (
                     <Fragment key={index}>
                       <Image
                         cursor="pointer"
@@ -54,11 +54,11 @@ export const PostModal = ({ onClose, sourceMeta }: Props) => {
                         h="3.75rem"
                         minW="3.75rem"
                         rounded="lg"
-                        src={image.src}
+                        src={image.url}
                         onClick={() => setSelectedImageIndex(index)}
                         alt=""
                       />
-                      {index !== sourceMeta.media.length && (
+                      {index !== post.media.length && (
                         <Spacer flexShrink={0} h={3} w={3} />
                       )}
                     </Fragment>
@@ -68,13 +68,13 @@ export const PostModal = ({ onClose, sourceMeta }: Props) => {
               {moreThanOneImage && (
                 <Spacer flexShrink={0} h="1.875rem" w="1.875rem" />
               )}
-              <Lightbox images={sourceMeta.media}>
+              <Lightbox images={post.media}>
                 {({ open }) => (
                   <Image
                     w="100%"
                     onClick={() => open(selectedImageIndex)}
                     rounded="lg"
-                    src={sourceMeta.media[selectedImageIndex].src}
+                    src={post.media[selectedImageIndex].url}
                     objectFit="contain"
                     bg="gray.300"
                     minH="21.25rem"
@@ -87,7 +87,7 @@ export const PostModal = ({ onClose, sourceMeta }: Props) => {
             </Flex>
           </Box>
           <Spacer h={4} />
-          <Text color="gray.700">{sourceMeta.text}</Text>
+          <Text color="gray.700">{post.content}</Text>
           <Spacer h={4} />
         </ModalBody>
       </ModalContent>
@@ -96,13 +96,14 @@ export const PostModal = ({ onClose, sourceMeta }: Props) => {
 }
 
 PostModal.fragments = {
-  media: gql`
-    fragment PostMedia on SourceMeta {
-      id
+  data: gql`
+    fragment PostModalData on Post {
+      content
       media {
-        src
+        id
+        url
+        createdAt
       }
-      text
     }
   `,
 }

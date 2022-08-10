@@ -19,6 +19,7 @@ export class DraftsResolver {
     return this.postsRepository.find({
       where: { deletedAt: IsNull(), sentAt: IsNull(), scheduledOn: IsNull() },
       order: { createdAt: 'DESC' },
+      relations: ['media'],
     })
   }
 

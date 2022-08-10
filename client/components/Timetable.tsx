@@ -51,14 +51,12 @@ gql`
           id
           time
         }
-        sourceMeta {
-          ...PostMedia
-        }
+        ...PostModalData
       }
     }
   }
 
-  ${PostModal.fragments.media}
+  ${PostModal.fragments.data}
 `
 
 gql`
@@ -354,59 +352,61 @@ export const Timetable = ({ selectedDate }: { selectedDate: DateTime }) => {
                   </SchedulePostDropTarget>
                 ) : (
                   <>
-                    {timeslot.posts.map(({ id, sourceMeta, sentAt }, index) => (
-                      <DraggablePost
-                        key={index}
-                        timeslotId={timeslot.id}
-                        id={id}
-                        scheduledOn={selectedDate.toISODate()}
-                        canDrag={!sentAt}
-                      >
-                        <Postcard
-                          onClick={() => {
-                            setIdToView(id)
-                            viewDialog.onOpen()
-                          }}
+                    {timeslot.posts.map(
+                      ({ id, sentAt, content, media, __typename }, index) => (
+                        <DraggablePost
+                          key={index}
+                          timeslotId={timeslot.id}
+                          id={id}
+                          scheduledOn={selectedDate.toISODate()}
+                          canDrag={!sentAt}
                         >
-                          {viewDialog.isOpen && id === idToView && (
-                            <PostModal
-                              onClose={viewDialog.onClose}
-                              sourceMeta={sourceMeta}
-                            />
-                          )}
-                          <ImagePreview src={sourceMeta.media[0]?.src} />
-                          <Spacer height={4} />
-                          <Flex justify="space-between">
-                            <SourceLink href="#">TWITTER</SourceLink>
-                            {!sentAt && (
-                              <Box flexShrink={1}>
-                                <ActionIconButton
-                                  icon={<FaRegCalendarAlt />}
-                                  aria-label="Reschedule"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    setIdToReschedule(id)
-                                    rescheduleDialog.onOpen()
-                                  }}
-                                  mr={3}
-                                />
-                                <ActionIconButton
-                                  icon={<FaArchive />}
-                                  aria-label="Move to drafts"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    setIdToDelete(id)
-                                    deleteDialog.onOpen()
-                                  }}
-                                />
-                              </Box>
+                          <Postcard
+                            onClick={() => {
+                              setIdToView(id)
+                              viewDialog.onOpen()
+                            }}
+                          >
+                            {viewDialog.isOpen && id === idToView && (
+                              <PostModal
+                                onClose={viewDialog.onClose}
+                                post={{ content, media, __typename }}
+                              />
                             )}
-                          </Flex>
-                          <TextPreview>{sourceMeta.text}</TextPreview>
-                          <Spacer height={4} />
-                        </Postcard>
-                      </DraggablePost>
-                    ))}
+                            <ImagePreview src={media[0]?.url} />
+                            <Spacer height={4} />
+                            <Flex justify="space-between">
+                              <SourceLink href="#">TWITTER</SourceLink>
+                              {!sentAt && (
+                                <Box flexShrink={1}>
+                                  <ActionIconButton
+                                    icon={<FaRegCalendarAlt />}
+                                    aria-label="Reschedule"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      setIdToReschedule(id)
+                                      rescheduleDialog.onOpen()
+                                    }}
+                                    mr={3}
+                                  />
+                                  <ActionIconButton
+                                    icon={<FaArchive />}
+                                    aria-label="Move to drafts"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      setIdToDelete(id)
+                                      deleteDialog.onOpen()
+                                    }}
+                                  />
+                                </Box>
+                              )}
+                            </Flex>
+                            <TextPreview>{content}</TextPreview>
+                            <Spacer height={4} />
+                          </Postcard>
+                        </DraggablePost>
+                      ),
+                    )}
                     {timeslotIsInFuture && (
                       <SchedulePostDropTarget
                         canDrop={timeslotIsInFuture}
