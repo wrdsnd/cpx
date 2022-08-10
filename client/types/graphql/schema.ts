@@ -36,6 +36,19 @@ export type LoginResult = {
   result: Scalars['Boolean']
 }
 
+export type LogoutResult = {
+  __typename?: 'LogoutResult'
+  result: Scalars['Boolean']
+}
+
+export type Media = {
+  __typename?: 'Media'
+  createdAt: Scalars['ISO8601DateTime']
+  id: Scalars['String']
+  post: Post
+  url: Scalars['String']
+}
+
 export type MediaInput = {
   src: Scalars['String']
 }
@@ -43,6 +56,7 @@ export type MediaInput = {
 export type Mutation = {
   __typename?: 'Mutation'
   login: LoginResult
+  logout: LogoutResult
   removeFromQueue?: Maybe<Scalars['Boolean']>
   reschedule: Array<Maybe<Timeslot>>
   saveAsDraft: Post
@@ -80,13 +94,14 @@ export type News = {
 
 export type Post = {
   __typename?: 'Post'
+  content: Scalars['String']
   createdAt?: Maybe<Scalars['ISO8601DateTime']>
   id: Scalars['String']
   isDraft: Scalars['Boolean']
+  media: Array<Media>
   scheduledOn?: Maybe<Scalars['ISO8601Date']>
   sentAt?: Maybe<Scalars['ISO8601DateTime']>
   sourceId: Scalars['String']
-  sourceMeta?: Maybe<SourceMeta>
   timeslot?: Maybe<Timeslot>
 }
 
@@ -128,14 +143,6 @@ export type SendToQueueInput = {
   timeslotId?: InputMaybe<Scalars['String']>
 }
 
-export type SourceMeta = {
-  __typename?: 'SourceMeta'
-  author: Scalars['String']
-  id: Scalars['String']
-  media?: Maybe<Array<Maybe<Image>>>
-  text?: Maybe<Scalars['String']>
-}
-
 export type Timeslot = {
   __typename?: 'Timeslot'
   id: Scalars['String']
@@ -160,12 +167,13 @@ export type GetDraftsQuery = {
     __typename?: 'Post'
     id: string
     createdAt?: any | null
-    sourceMeta?: {
-      __typename?: 'SourceMeta'
+    content: string
+    media: Array<{
+      __typename?: 'Media'
       id: string
-      text?: string | null
-      media?: Array<{ __typename?: 'Image'; src: string } | null> | null
-    } | null
+      url: string
+      createdAt: any
+    }>
   } | null> | null
 }
 
@@ -228,12 +236,12 @@ export type ReloadQueueAfterPostCreationQuery = {
       sentAt?: any | null
       sourceId: string
       createdAt?: any | null
-      sourceMeta?: {
-        __typename?: 'SourceMeta'
-        text?: string | null
+      media: Array<{
+        __typename?: 'Media'
         id: string
-        media?: Array<{ __typename?: 'Image'; src: string } | null> | null
-      } | null
+        url: string
+        createdAt: any
+      }>
     }> | null
   } | null> | null
 }
@@ -263,11 +271,15 @@ export type SendToQueueFromEditorMutation = {
   }
 }
 
-export type PostMediaFragment = {
-  __typename?: 'SourceMeta'
-  id: string
-  text?: string | null
-  media?: Array<{ __typename?: 'Image'; src: string } | null> | null
+export type PostModalDataFragment = {
+  __typename?: 'Post'
+  content: string
+  media: Array<{
+    __typename?: 'Media'
+    id: string
+    url: string
+    createdAt: any
+  }>
 }
 
 export type GetDataToRescheduleQueryVariables = Exact<{
@@ -351,13 +363,14 @@ export type GetQueueQuery = {
       sourceId: string
       createdAt?: any | null
       scheduledOn?: any | null
+      content: string
       timeslot?: { __typename?: 'Timeslot'; id: string; time: any } | null
-      sourceMeta?: {
-        __typename?: 'SourceMeta'
+      media: Array<{
+        __typename?: 'Media'
         id: string
-        text?: string | null
-        media?: Array<{ __typename?: 'Image'; src: string } | null> | null
-      } | null
+        url: string
+        createdAt: any
+      }>
     }> | null
   } | null> | null
 }

@@ -38,8 +38,8 @@ export class AnalyzeResolver {
 
   @Query()
   async news(@Args('id') id: string) {
-    return this.twitterService
-      .show({ id })
-      .then((tweet) => this.tweetToPost(tweet.data))
+    const d: any = await this.twitterService.show({ id })
+
+    return this.tweetToPost(d.data)
   }
 }

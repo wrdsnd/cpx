@@ -26,12 +26,11 @@ gql`
     drafts {
       id
       createdAt
-      sourceMeta {
+      content
+      media {
         id
-        media {
-          src
-        }
-        text
+        url
+        createdAt
       }
     }
   }
@@ -95,11 +94,11 @@ export const FromDrafts = ({ onSubmit }: Props) => {
       {data.drafts.map((post, index) => {
         return (
           <Postcard key={post.id}>
-            <Lightbox images={post.sourceMeta.media}>
+            <Lightbox images={post.media}>
               {({ open }) => (
                 <ImagePreview
                   onClick={() => open(index)}
-                  src={post.sourceMeta.media[0]?.src}
+                  src={post.media[0]?.url}
                 />
               )}
             </Lightbox>
@@ -124,9 +123,7 @@ export const FromDrafts = ({ onSubmit }: Props) => {
                 }}
               />
             </Flex>
-            <TextPreview title={post.sourceMeta.text}>
-              {post.sourceMeta.text}
-            </TextPreview>
+            <TextPreview title={post.content}>{post.content}</TextPreview>
             <Spacer height={4} />
           </Postcard>
         )

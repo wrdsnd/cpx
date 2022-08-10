@@ -39,19 +39,20 @@ input SaveAsDraftInput {
   id: String!
 }
 
-type SourceMeta {
+type Media {
   id: String!
-  author: String!
-  text: String
-  media: [Image]
+  url: String!
+  post: Post!
+  createdAt: ISO8601DateTime!
 }
 
 type Post {
   id: String!
   sentAt: ISO8601DateTime
+  content: String!
+  media: [Media!]!
   sourceId: String!
   createdAt: ISO8601DateTime
-  sourceMeta: SourceMeta
   timeslot: Timeslot
   isDraft: Boolean!
   scheduledOn: ISO8601Date

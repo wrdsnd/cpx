@@ -15,7 +15,7 @@ import { FaChevronRight, FaChevronLeft } from 'react-icons/fa'
 import { useKeyPressEvent } from 'react-use'
 
 type Props = {
-  images: ReadonlyArray<{ src: string }>
+  images: ReadonlyArray<{ url: string }>
   children: any
 }
 
@@ -114,7 +114,7 @@ export const Lightbox = ({ images = [], children }: Props) => {
             <AnimatePresence initial={false} custom={direction}>
               <motion.img
                 key={page}
-                src={images[imageIndex]?.src}
+                src={images[imageIndex]?.url}
                 custom={direction}
                 variants={variants}
                 initial="enter"
