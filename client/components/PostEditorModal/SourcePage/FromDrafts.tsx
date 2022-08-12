@@ -7,6 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   AlertDialogProps,
+  Box,
   Button,
   Flex,
   Grid,
@@ -17,11 +18,13 @@ import { Lightbox } from 'components/Lightbox'
 import { VideoPreview } from 'components/Postcard'
 import { ActionIconButton } from 'components/Postcard/ActionIconButton'
 import { ImagePreview } from 'components/Postcard/ImagePreview'
+import { SourceLink } from 'components/Postcard/SourceLink'
 import { TextPreview } from 'components/Postcard/TextPreview'
 import { useGetDraftsQuery, useRemoveFromQueueMutation } from 'hooks/graphql'
 import { useRef, useState } from 'react'
 import { FaCheckCircle, FaTrashAlt } from 'react-icons/fa'
 import { MediaType } from 'types/graphql/schema'
+import { createTweetUrl } from 'utils/twitter'
 
 gql`
   query GetDrafts {
@@ -29,6 +32,7 @@ gql`
       id
       createdAt
       content
+      sourceId
       media {
         id
         url
@@ -95,7 +99,7 @@ export const FromDrafts = ({ onSubmit }: Props) => {
         }}
       />
       {data.drafts.map((post, index) => {
-        const { media } = post
+        const { sourceId, media } = post
 
         return (
           <Postcard key={post.id}>
@@ -121,25 +125,28 @@ export const FromDrafts = ({ onSubmit }: Props) => {
               }}
             </Lightbox>
             <Spacer height={4} />
-            <Flex justify="flex-end">
-              <ActionIconButton
-                icon={<FaTrashAlt />}
-                aria-label="Remove from queue"
-                mr={3}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setIdToDelete(post.id)
-                  deletionDialog.onOpen()
-                }}
-              />
-              <ActionIconButton
-                icon={<FaCheckCircle />}
-                aria-label="Pick"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onSubmit(post.id)
-                }}
-              />
+            <Flex justify="space-between">
+              <SourceLink href={createTweetUrl(sourceId)}>TWITTER</SourceLink>
+              <Box flexShrink={1}>
+                <ActionIconButton
+                  icon={<FaTrashAlt />}
+                  aria-label="Remove from queue"
+                  mr={3}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIdToDelete(post.id)
+                    deletionDialog.onOpen()
+                  }}
+                />
+                <ActionIconButton
+                  icon={<FaCheckCircle />}
+                  aria-label="Pick"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onSubmit(post.id)
+                  }}
+                />
+              </Box>
             </Flex>
             <TextPreview title={post.content}>{post.content}</TextPreview>
             <Spacer height={4} />

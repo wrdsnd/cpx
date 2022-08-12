@@ -7,7 +7,7 @@ import { ImagePreview, VideoPreview } from 'components/Postcard'
 import { SourceLink } from 'components/Postcard/SourceLink'
 import { ActionIconButton } from 'components/Postcard/ActionIconButton'
 import { TextPreview } from 'components/Postcard/TextPreview'
-import { createTweetUrl } from 'utils/sources'
+import { createTweetUrl } from 'utils/twitter'
 import { AddIcon } from '@chakra-ui/icons'
 import { useGetPostsLazyQuery } from 'hooks/graphql'
 import { WorkspaceLayout } from 'components/WorkspaceLayout'
@@ -106,12 +106,7 @@ const Feed = () => {
                 )}
                 <Spacer height={4} />
                 <Flex justify="space-between">
-                  <SourceLink
-                    href={createTweetUrl({
-                      id: post.id,
-                      username: post.user.name,
-                    })}
-                  >
+                  <SourceLink href={createTweetUrl(post.id)}>
                     TWITTER
                   </SourceLink>
                   <Box flexShrink={1}>
@@ -119,12 +114,7 @@ const Feed = () => {
                       icon={<AddIcon />}
                       aria-label="Add to queue"
                       onClick={() => {
-                        setSourceUrl(
-                          createTweetUrl({
-                            id: post.id,
-                            username: post.user.name,
-                          }),
-                        )
+                        setSourceUrl(createTweetUrl(post.id))
                         setModalIsOpen(true)
                       }}
                     />

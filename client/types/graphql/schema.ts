@@ -176,6 +176,7 @@ export type GetDraftsQuery = {
     id: string
     createdAt?: any | null
     content: string
+    sourceId: string
     media: Array<{
       __typename?: 'Media'
       id: string
