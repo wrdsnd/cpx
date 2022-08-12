@@ -37,6 +37,7 @@ import {
 } from 'hooks/graphql'
 import { VideoPreview } from './Postcard'
 import { MediaType } from 'types/graphql/schema'
+import { createTweetUrl } from 'utils/twitter'
 
 gql`
   query GetQueue($date: ISO8601Date!) {
@@ -355,7 +356,10 @@ export const Timetable = ({ selectedDate }: { selectedDate: DateTime }) => {
                 ) : (
                   <>
                     {timeslot.posts.map(
-                      ({ id, sentAt, content, media, __typename }, index) => (
+                      (
+                        { id, sentAt, sourceId, content, media, __typename },
+                        index,
+                      ) => (
                         <DraggablePost
                           key={index}
                           timeslotId={timeslot.id}
@@ -383,7 +387,9 @@ export const Timetable = ({ selectedDate }: { selectedDate: DateTime }) => {
                             )}
                             <Spacer height={4} />
                             <Flex justify="space-between">
-                              <SourceLink href="#">TWITTER</SourceLink>
+                              <SourceLink href={createTweetUrl(sourceId)}>
+                                TWITTER
+                              </SourceLink>
                               {!sentAt && (
                                 <Box flexShrink={1}>
                                   <ActionIconButton

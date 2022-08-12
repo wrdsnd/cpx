@@ -20,6 +20,7 @@ export const GetDraftsDocument = gql`
       id
       createdAt
       content
+      sourceId
       media {
         id
         url
