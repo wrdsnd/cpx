@@ -50,7 +50,7 @@ export const FromURL = ({ initialSourceUrl, onSubmit }: Props) => {
       <Spacer height={4} />
       {postIsReady && (
         <Form<{
-          images: GetPostQuery['news']['images']
+          images: GetPostQuery['news']['media']
           message: string
         }>
           initialValues={{
@@ -58,7 +58,7 @@ export const FromURL = ({ initialSourceUrl, onSubmit }: Props) => {
               id: sourceId,
               username: getPostRequest.data.news.user.name,
             }),
-            images: getPostRequest.data.news.images,
+            images: getPostRequest.data.news.media,
           }}
           onSubmit={(v) => {
             const post: SendToQueueInput = {

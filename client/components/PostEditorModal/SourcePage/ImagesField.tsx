@@ -7,18 +7,18 @@ import { Image, Box, BoxProps } from '@chakra-ui/react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { Lightbox } from 'components/Lightbox'
 import { move } from './utils'
+import { MediaType, TwitterMedia } from 'types/graphql/schema'
 
 export const ImagesField = () => {
-  const { input } = useField('images')
+  const { input } = useField<TwitterMedia[]>('images')
   const { value, onChange } = input
 
   const renderImage = useCallback(
-    (image, index) => {
+    (_, index) => {
       return (
         <DraggableImage
           onChange={onChange}
-          imageSrc={image.src}
-          images={value}
+          media={value}
           index={index}
           key={index}
           sx={{
@@ -43,14 +43,12 @@ interface DragItem {
 
 type DraggableImageProps = {
   index: number
-  imageSrc: any
-  images: any[]
+  media: TwitterMedia[]
   onChange: (v: any) => void
 } & BoxProps
 const DraggableImage = ({
   index,
-  imageSrc,
-  images,
+  media,
   onChange,
   ...rest
 }: DraggableImageProps) => {
@@ -109,12 +107,12 @@ const DraggableImage = ({
       // Time to actually perform the action
       // alert(dragIndex, hoverIndex)
       console.log(
-        images,
-        move(images, dragIndex, hoverIndex),
+        media,
+        move(media, dragIndex, hoverIndex),
         dragIndex,
         hoverIndex,
       )
-      onChange(move(images, dragIndex, hoverIndex))
+      onChange(move(media, dragIndex, hoverIndex))
 
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
@@ -129,6 +127,7 @@ const DraggableImage = ({
     item: () => {
       return { index }
     },
+    canDrag: media.length > 1,
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -137,43 +136,62 @@ const DraggableImage = ({
   const opacity = isDragging ? 0.9 : 1
   drag(drop(ref))
 
+  const mediaItem = media[index]
+
   return (
     <Box
       ref={ref}
-      cursor="grab"
+      cursor={media.length > 1 && 'grab'}
       opacity={opacity}
       data-handler-id={handlerId}
       {...rest}
     >
-      <Lightbox images={images}>
+      <Lightbox images={media}>
         {({ open }) => (
-          <Image
-            onClick={() => open(index)}
-            src={imageSrc}
-            borderRadius="md"
-            userSelect="none"
-            alt=""
-          />
+          <>
+            {mediaItem.type === MediaType.VIDEO && (
+              <video
+                onClick={() => open(index)}
+                src={mediaItem.url}
+                autoPlay
+                loop
+                muted
+              />
+            )}
+            {mediaItem.type === MediaType.IMAGE && (
+              <Image
+                onClick={() => open(index)}
+                src={mediaItem.url}
+                borderRadius="md"
+                userSelect="none"
+                alt=""
+              />
+            )}
+            {media.length > 1 && (
+              <CloseIcon
+                onClick={() => {
+                  onChange(
+                    remove(media, (_, imageIndex) => index !== imageIndex),
+                  )
+                }}
+                color="white"
+                backgroundColor="gray.900"
+                position="absolute"
+                top={2}
+                borderRadius="sm"
+                right={2}
+                p={1}
+                height={5}
+                width={5}
+                cursor="pointer"
+                _hover={{
+                  opacity: 1,
+                }}
+              />
+            )}
+          </>
         )}
       </Lightbox>
-      <CloseIcon
-        onClick={() => {
-          onChange(remove(images, (_, imageIndex) => index !== imageIndex))
-        }}
-        color="white"
-        backgroundColor="gray.900"
-        position="absolute"
-        top={2}
-        borderRadius="sm"
-        right={2}
-        p={1}
-        height={5}
-        width={5}
-        cursor="pointer"
-        _hover={{
-          opacity: 1,
-        }}
-      />
     </Box>
   )
 }

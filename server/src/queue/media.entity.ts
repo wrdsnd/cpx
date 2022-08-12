@@ -1,3 +1,4 @@
+import { MediaType } from 'src/graphql'
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,11 +7,6 @@ import {
   ManyToOne,
 } from 'typeorm'
 import { Post } from './post.entity'
-
-export enum Type {
-  IMAGE = 'image',
-  VIDEO = 'video',
-}
 
 @Entity()
 export class Media {
@@ -22,9 +18,9 @@ export class Media {
 
   @Column({
     type: 'enum',
-    enum: Type,
+    enum: MediaType,
   })
-  type: Type
+  type: MediaType
 
   @ManyToOne(() => Post, (post) => post.media)
   post: Post

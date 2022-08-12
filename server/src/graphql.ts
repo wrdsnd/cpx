@@ -6,6 +6,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export enum MediaType {
+    IMAGE = "IMAGE",
+    VIDEO = "VIDEO"
+}
+
 export class LoginInput {
     email: string;
     password: string;
@@ -16,7 +21,8 @@ export class SaveAsDraftInput {
 }
 
 export class MediaInput {
-    src: string;
+    type: MediaType;
+    url: string;
 }
 
 export class RescheduleInput {
@@ -73,6 +79,7 @@ export class LogoutResult {
 
 export class Media {
     id: string;
+    type: MediaType;
     url: string;
     post: Post;
     createdAt: ISO8601DateTime;
@@ -96,20 +103,21 @@ export class Timeslot {
     posts?: Post[];
 }
 
-export class User {
+export class TwitterUser {
     name: string;
 }
 
-export class Image {
-    src: string;
+export class TwitterMedia {
+    type: MediaType;
+    url: string;
 }
 
 export class News {
     id: string;
     inQueue: boolean;
     message?: string;
-    user?: User;
-    images: Image[];
+    user: TwitterUser;
+    media: TwitterMedia[];
 }
 
 export type ISO8601Date = Date;

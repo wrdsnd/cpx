@@ -9,19 +9,21 @@ import {
   Flex,
   Text,
   Box,
+  BoxProps,
 } from '@chakra-ui/react'
 import { Spacer } from 'components/Spacer'
 import { Fragment, useState } from 'react'
 import { Lightbox } from 'components/Lightbox'
 import gql from 'graphql-tag'
-import { PostModalDataFragment } from 'types/graphql/schema'
+import { MediaType, PostModalDataFragment } from 'types/graphql/schema'
+import { ImageProps } from 'next/image'
 
 type Props = {
   post: PostModalDataFragment
 } & Pick<ModalProps, 'onClose'>
 
 export const PostModal = ({ onClose, post }: Props) => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+  const [selectedMediaIndex, setSelectedImageIndex] = useState(0)
   const moreThanOneImage = post.media.length > 1
 
   return (
@@ -69,20 +71,44 @@ export const PostModal = ({ onClose, post }: Props) => {
                 <Spacer flexShrink={0} h="1.875rem" w="1.875rem" />
               )}
               <Lightbox images={post.media}>
-                {({ open }) => (
-                  <Image
-                    w="100%"
-                    onClick={() => open(selectedImageIndex)}
-                    rounded="lg"
-                    src={post.media[selectedImageIndex].url}
-                    objectFit="contain"
-                    bg="gray.300"
-                    minH="21.25rem"
-                    maxH="21.25rem"
-                    overflow="hidden"
-                    alt=""
-                  />
-                )}
+                {({ open }) => {
+                  const commonProps: BoxProps | ImageProps = {
+                    w: '100%',
+                    rounded: 'lg',
+                    onClick: () => open(selectedMediaIndex),
+                    objectFit: 'contain',
+                    bg: 'gray.300',
+                    minH: '21.25rem',
+                    maxH: '21.25rem',
+                    overflow: 'hidden',
+                  }
+
+                  switch (post.media[selectedMediaIndex].type) {
+                    case MediaType.IMAGE: {
+                      return (
+                        <Image
+                          alt=""
+                          src={post.media[selectedMediaIndex].url}
+                          {...commonProps}
+                        />
+                      )
+                    }
+                    case MediaType.VIDEO: {
+                      return (
+                        <Box
+                          as="video"
+                          loop
+                          autoPlay
+                          muted
+                          playsInline
+                          disablePictureInPicture
+                          src={post.media[selectedMediaIndex].url}
+                          {...commonProps}
+                        />
+                      )
+                    }
+                  }
+                }}
               </Lightbox>
             </Flex>
           </Box>
@@ -102,6 +128,7 @@ PostModal.fragments = {
       media {
         id
         url
+        type
         createdAt
       }
     }

@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DateTime } from 'luxon'
 import { Post } from '../queue/post.entity'
+import { MediaType } from 'src/graphql'
 
 @Injectable()
 export class PublisherService {
@@ -18,12 +19,21 @@ export class PublisherService {
 
   private readonly logger = new Logger(PublisherService.name)
 
+  private mediaTypeToTelegramType = (type: MediaType): 'photo' | 'video' => {
+    switch (type) {
+      case MediaType.IMAGE:
+        return 'photo'
+      case MediaType.VIDEO:
+        return 'video'
+    }
+  }
+
   async publish(posts: Post[]) {
     posts.forEach(async (item) => {
       const media = item.media || []
 
       const formattedMedia = media.map((i) => ({
-        type: 'photo',
+        type: this.mediaTypeToTelegramType(i.type),
         media: i.url,
         caption: undefined,
         parse_mode: 'Markdown',

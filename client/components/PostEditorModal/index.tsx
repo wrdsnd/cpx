@@ -190,8 +190,9 @@ gql`
     news(id: $id) {
       id
       inQueue
-      images {
-        src
+      media {
+        url
+        type
       }
       user {
         name
