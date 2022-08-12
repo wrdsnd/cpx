@@ -5,7 +5,7 @@ export class PostUpdate1659869162363 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TYPE "media_type_enum" AS ENUM('image', 'video')`,
+      `CREATE TYPE "media_type_enum" AS ENUM('IMAGE', 'VIDEO')`,
     )
     await queryRunner.query(
       `CREATE TABLE "media" ("id" SERIAL NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "url" character varying NOT NULL, "type" "media_type_enum" NOT NULL, "postId" integer, CONSTRAINT "PK_f4e0fcac36e050de337b670d8bd" PRIMARY KEY ("id"))`,

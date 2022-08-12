@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { Flex, Box, Grid } from '@chakra-ui/react'
 import { Postcard, Lightbox, Spacer, PostEditorModal, Status } from 'components'
 import Head from 'next/head'
-import { ImagePreview } from 'components/Postcard/ImagePreview'
+import { ImagePreview, VideoPreview } from 'components/Postcard'
 import { SourceLink } from 'components/Postcard/SourceLink'
 import { ActionIconButton } from 'components/Postcard/ActionIconButton'
 import { TextPreview } from 'components/Postcard/TextPreview'
@@ -12,6 +12,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { useGetPostsLazyQuery } from 'hooks/graphql'
 import { WorkspaceLayout } from 'components/WorkspaceLayout'
 import { useAuthAccess } from 'hooks/access'
+import { MediaType } from 'types/graphql/schema'
 
 gql`
   query GetPosts {
@@ -22,8 +23,9 @@ gql`
       user {
         name
       }
-      images {
-        src
+      media {
+        url
+        type
       }
     }
   }
@@ -86,17 +88,22 @@ const Feed = () => {
         gap={10}
       >
         {data.feed.map((post, index) => (
-          <Lightbox
-            key={index}
-            images={post.images.map((i) => ({ ...i, url: i.src }))}
-          >
+          <Lightbox key={index} images={post.media}>
             {({ open }) => (
               <Postcard>
-                <ImagePreview
-                  alt=""
-                  onClick={() => open(0)}
-                  src={post.images[0]?.src}
-                />
+                {post.media[0].type === MediaType.IMAGE && (
+                  <ImagePreview
+                    alt=""
+                    onClick={() => open(0)}
+                    src={post.media[0]?.url}
+                  />
+                )}
+                {post.media[0].type === MediaType.VIDEO && (
+                  <VideoPreview
+                    onClick={() => open(0)}
+                    src={post.media[0]?.url}
+                  />
+                )}
                 <Spacer height={4} />
                 <Flex justify="space-between">
                   <SourceLink

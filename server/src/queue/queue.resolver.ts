@@ -7,7 +7,7 @@ import * as Schema from 'src/graphql'
 import { Timeslot } from './timeslot.entity'
 import { AuthGuard } from '../guards'
 import { UseGuards } from '@nestjs/common'
-import { Media, Type } from './media.entity'
+import { Media } from './media.entity'
 
 @Resolver('Queue')
 export class QueueResolver {
@@ -17,9 +17,6 @@ export class QueueResolver {
 
     @InjectRepository(Timeslot)
     private timeslotsRepository: Repository<Timeslot>,
-
-    @InjectRepository(Media)
-    private mediaRepository: Repository<Media>,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -56,10 +53,10 @@ export class QueueResolver {
 
     const post = new Post()
 
-    const media = input.media.map((data) => {
+    const media = input.media.map((m) => {
       const record = new Media()
-      record.url = data.src
-      record.type = Type.IMAGE
+      record.url = m.url
+      record.type = m.type
       return record
     })
     post.media = media

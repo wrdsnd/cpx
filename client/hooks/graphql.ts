@@ -9,6 +9,7 @@ export const PostModalDataFragmentDoc = gql`
     media {
       id
       url
+      type
       createdAt
     }
   }
@@ -22,6 +23,7 @@ export const GetDraftsDocument = gql`
       media {
         id
         url
+        type
         createdAt
       }
     }
@@ -128,8 +130,9 @@ export const GetPostDocument = gql`
     news(id: $id) {
       id
       inQueue
-      images {
-        src
+      media {
+        url
+        type
       }
       user {
         name
@@ -258,6 +261,7 @@ export const ReloadQueueAfterPostCreationDocument = gql`
         sentAt
         sourceId
         createdAt
+        content
         media {
           id
           url
@@ -819,8 +823,9 @@ export const GetPostsDocument = gql`
       user {
         name
       }
-      images {
-        src
+      media {
+        url
+        type
       }
     }
   }

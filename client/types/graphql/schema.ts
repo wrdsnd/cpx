@@ -21,11 +21,6 @@ export type Scalars = {
   ISO8601Time: any
 }
 
-export type Image = {
-  __typename?: 'Image'
-  src: Scalars['String']
-}
-
 export type LoginInput = {
   email: Scalars['String']
   password: Scalars['String']
@@ -46,11 +41,18 @@ export type Media = {
   createdAt: Scalars['ISO8601DateTime']
   id: Scalars['String']
   post: Post
+  type: MediaType
   url: Scalars['String']
 }
 
 export type MediaInput = {
-  src: Scalars['String']
+  type: MediaType
+  url: Scalars['String']
+}
+
+export enum MediaType {
+  IMAGE = 'IMAGE',
+  VIDEO = 'VIDEO',
 }
 
 export type Mutation = {
@@ -86,10 +88,10 @@ export type MutationSendToQueueArgs = {
 export type News = {
   __typename?: 'News'
   id: Scalars['String']
-  images: Array<Image>
   inQueue: Scalars['Boolean']
+  media: Array<TwitterMedia>
   message?: Maybe<Scalars['String']>
-  user?: Maybe<User>
+  user: TwitterUser
 }
 
 export type Post = {
@@ -154,8 +156,14 @@ export type TimeslotPostsArgs = {
   date: Scalars['ISO8601Date']
 }
 
-export type User = {
-  __typename?: 'User'
+export type TwitterMedia = {
+  __typename?: 'TwitterMedia'
+  type: MediaType
+  url: Scalars['String']
+}
+
+export type TwitterUser = {
+  __typename?: 'TwitterUser'
   name: Scalars['String']
 }
 
@@ -172,6 +180,7 @@ export type GetDraftsQuery = {
       __typename?: 'Media'
       id: string
       url: string
+      type: MediaType
       createdAt: any
     }>
   } | null> | null
@@ -196,8 +205,8 @@ export type GetPostQuery = {
     __typename?: 'News'
     id: string
     inQueue: boolean
-    images: Array<{ __typename?: 'Image'; src: string }>
-    user?: { __typename?: 'User'; name: string } | null
+    media: Array<{ __typename?: 'TwitterMedia'; url: string; type: MediaType }>
+    user: { __typename?: 'TwitterUser'; name: string }
   } | null
 }
 
@@ -236,6 +245,7 @@ export type ReloadQueueAfterPostCreationQuery = {
       sentAt?: any | null
       sourceId: string
       createdAt?: any | null
+      content: string
       media: Array<{
         __typename?: 'Media'
         id: string
@@ -278,6 +288,7 @@ export type PostModalDataFragment = {
     __typename?: 'Media'
     id: string
     url: string
+    type: MediaType
     createdAt: any
   }>
 }
@@ -369,6 +380,7 @@ export type GetQueueQuery = {
         __typename?: 'Media'
         id: string
         url: string
+        type: MediaType
         createdAt: any
       }>
     }> | null
@@ -413,8 +425,8 @@ export type GetPostsQuery = {
     id: string
     inQueue: boolean
     message?: string | null
-    user?: { __typename?: 'User'; name: string } | null
-    images: Array<{ __typename?: 'Image'; src: string }>
+    user: { __typename?: 'TwitterUser'; name: string }
+    media: Array<{ __typename?: 'TwitterMedia'; url: string; type: MediaType }>
   } | null> | null
 }
 

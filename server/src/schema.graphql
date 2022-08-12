@@ -4,6 +4,11 @@ scalar ISO8601Date
 scalar ISO8601DateTime
 scalar ISO8601Time
 
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
 type Query {
   feed: [News]
   news(id: String!): News
@@ -41,6 +46,7 @@ input SaveAsDraftInput {
 
 type Media {
   id: String!
+  type: MediaType!
   url: String!
   post: Post!
   createdAt: ISO8601DateTime!
@@ -64,24 +70,26 @@ type Timeslot {
   posts(date: ISO8601Date!): [Post!]
 }
 
-type User {
+type TwitterUser {
   name: String!
 }
 
-type Image {
-  src: String!
+type TwitterMedia {
+  type: MediaType!
+  url: String!
 }
 
 type News {
   id: String!
   inQueue: Boolean!
   message: String
-  user: User
-  images: [Image!]!
+  user: TwitterUser!
+  media: [TwitterMedia!]!
 }
 
 input MediaInput {
-  src: String!
+  type: MediaType!
+  url: String!
 }
 
 input RescheduleInput {

@@ -35,6 +35,8 @@ import {
   useMoveToDraftsFromQueueMutation,
   useReschedulePostOnDropMutation,
 } from 'hooks/graphql'
+import { VideoPreview } from './Postcard'
+import { MediaType } from 'types/graphql/schema'
 
 gql`
   query GetQueue($date: ISO8601Date!) {
@@ -373,7 +375,12 @@ export const Timetable = ({ selectedDate }: { selectedDate: DateTime }) => {
                                 post={{ content, media, __typename }}
                               />
                             )}
-                            <ImagePreview src={media[0]?.url} />
+                            {media[0].type === MediaType.IMAGE && (
+                              <ImagePreview alt="" src={media[0]?.url} />
+                            )}
+                            {media[0].type === MediaType.VIDEO && (
+                              <VideoPreview src={media[0]?.url} />
+                            )}
                             <Spacer height={4} />
                             <Flex justify="space-between">
                               <SourceLink href="#">TWITTER</SourceLink>

@@ -6,6 +6,7 @@ import { Subscription } from '../subscriptions/subscription.entity'
 import { TwitterService } from '../twitter/twitter.service'
 import { Post } from '../queue/post.entity'
 import { AuthGuard } from '../guards'
+import * as Schema from 'src/graphql'
 
 @Resolver('Feed')
 export class FeedResolver {
@@ -28,25 +29,39 @@ export class FeedResolver {
       sourceId: tweet.id_str,
     })
 
-    const images = mediaEntities.map((entity) => ({
-      src: entity.media_url_https,
-    }))
+    const media: Schema.TwitterMedia[] = mediaEntities.map(
+      (entity: any): Schema.TwitterMedia => {
+        switch (entity['type']) {
+          case 'animated_gif': {
+            return {
+              url: entity['video_info']['variants'][0].url,
+              type: Schema.MediaType.VIDEO,
+            }
+          }
+          default: {
+            return {
+              url: entity.media_url_https,
+              type: Schema.MediaType.IMAGE,
+            }
+          }
+        }
+      },
+    )
 
     return {
-      _id: tweet.id_str,
       id: tweet.id_str,
       inQueue: !!queueRecord,
       user: {
         name: tweet?.user?.screen_name,
       },
       message: tweet.text,
-      images,
+      media,
     }
   }
 
   @UseGuards(AuthGuard)
   @Query()
-  async feed() {
+  async feed(): Promise<Schema.News[]> {
     const subscriptions = await this.subscriptionsRepository.find()
     const userIds = subscriptions.map((s) => s.userId)
 

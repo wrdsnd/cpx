@@ -13,9 +13,10 @@ import {
 } from '@chakra-ui/react'
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa'
 import { useKeyPressEvent } from 'react-use'
+import { MediaType, TwitterMedia } from 'types/graphql/schema'
 
 type Props = {
-  images: ReadonlyArray<{ url: string }>
+  images: ReadonlyArray<Omit<TwitterMedia, '__typename'>>
   children: any
 }
 
@@ -67,7 +68,7 @@ export const Lightbox = ({ images = [], children }: Props) => {
   // then wrap that within 0-2 to find our image ID in the array below. By passing an
   // absolute page index as the `motion` component's `key` prop, `AnimatePresence` will
   // detect it as an entirely new image. So you can infinitely paginate as few as 1 images.
-  const imageIndex = wrap(0, images.length, page)
+  const mediaIndex = wrap(0, images.length, page)
 
   const paginate = (newDirection: number) => {
     setPage([page + newDirection, newDirection])
@@ -80,6 +81,35 @@ export const Lightbox = ({ images = [], children }: Props) => {
   useKeyPressEvent('ArrowLeft', () => {
     scrollIsEnabled && paginate(-1)
   })
+
+  const mediaProps = {
+    key: page,
+    src: images[mediaIndex]?.url,
+    custom: direction,
+    variants,
+    initial: 'enter',
+    animate: 'center',
+    exit: 'exit',
+    onClick: (e) => {
+      e.stopPropagation()
+    },
+    transition: {
+      x: { type: 'spring', stiffness: 300, damping: 30 },
+      opacity: { duration: 0.2 },
+    },
+    drag: scrollIsEnabled ? ('x' as const) : false,
+    dragConstraints: { left: 0, right: 0 },
+    dragElastic: 1,
+    onDragEnd: (_, { offset, velocity }) => {
+      const swipe = swipePower(offset.x, velocity.x)
+
+      if (swipe < -swipeConfidenceThreshold) {
+        paginate(1)
+      } else if (swipe > swipeConfidenceThreshold) {
+        paginate(-1)
+      }
+    },
+  }
 
   return (
     <>
@@ -95,7 +125,7 @@ export const Lightbox = ({ images = [], children }: Props) => {
         >
           <ModalHeader color="white" fontSize="xl">
             <Text display="inline" sx={{ fontVariantNumeric: 'tabular-nums' }}>
-              {imageIndex + 1}
+              {mediaIndex + 1}
             </Text>{' '}
             of{' '}
             <Text display="inline" sx={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -112,39 +142,31 @@ export const Lightbox = ({ images = [], children }: Props) => {
             height="100vh"
           >
             <AnimatePresence initial={false} custom={direction}>
-              <motion.img
-                key={page}
-                src={images[imageIndex]?.url}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                onClick={(e) => {
-                  e.stopPropagation()
-                }}
-                transition={{
-                  x: { type: 'spring', stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 },
-                }}
-                drag={scrollIsEnabled ? 'x' : false}
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
-                onDragEnd={(_, { offset, velocity }) => {
-                  const swipe = swipePower(offset.x, velocity.x)
-
-                  if (swipe < -swipeConfidenceThreshold) {
-                    paginate(1)
-                  } else if (swipe > swipeConfidenceThreshold) {
-                    paginate(-1)
-                  }
-                }}
-                style={{
-                  position: 'absolute',
-                  maxWidth: '95vw',
-                  maxHeight: '95%',
-                }}
-              />
+              {images[mediaIndex]?.type === MediaType.VIDEO && (
+                <motion.video
+                  loop
+                  autoPlay
+                  playsInline
+                  disablePictureInPicture
+                  muted
+                  style={{
+                    position: 'absolute',
+                    maxWidth: '95vw',
+                    maxHeight: '95%',
+                  }}
+                  {...mediaProps}
+                />
+              )}
+              {images[mediaIndex]?.type === MediaType.IMAGE && (
+                <motion.img
+                  style={{
+                    position: 'absolute',
+                    maxWidth: '95vw',
+                    maxHeight: '95%',
+                  }}
+                  {...mediaProps}
+                />
+              )}
             </AnimatePresence>
             {scrollIsEnabled && (
               <>

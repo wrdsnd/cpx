@@ -14,12 +14,14 @@ import {
 } from '@chakra-ui/react'
 import { Postcard, Spacer, Status } from 'components'
 import { Lightbox } from 'components/Lightbox'
+import { VideoPreview } from 'components/Postcard'
 import { ActionIconButton } from 'components/Postcard/ActionIconButton'
 import { ImagePreview } from 'components/Postcard/ImagePreview'
 import { TextPreview } from 'components/Postcard/TextPreview'
 import { useGetDraftsQuery, useRemoveFromQueueMutation } from 'hooks/graphql'
 import { useRef, useState } from 'react'
 import { FaCheckCircle, FaTrashAlt } from 'react-icons/fa'
+import { MediaType } from 'types/graphql/schema'
 
 gql`
   query GetDrafts {
@@ -30,6 +32,7 @@ gql`
       media {
         id
         url
+        type
         createdAt
       }
     }
@@ -92,15 +95,30 @@ export const FromDrafts = ({ onSubmit }: Props) => {
         }}
       />
       {data.drafts.map((post, index) => {
+        const { media } = post
+
         return (
           <Postcard key={post.id}>
             <Lightbox images={post.media}>
-              {({ open }) => (
-                <ImagePreview
-                  onClick={() => open(index)}
-                  src={post.media[0]?.url}
-                />
-              )}
+              {({ open }) => {
+                switch (media[0].type) {
+                  case MediaType.IMAGE:
+                    return (
+                      <ImagePreview
+                        alt=""
+                        onClick={() => open(index)}
+                        src={media[0]?.url}
+                      />
+                    )
+                  case MediaType.VIDEO:
+                    return (
+                      <VideoPreview
+                        onClick={() => open(index)}
+                        src={media[0]?.url}
+                      />
+                    )
+                }
+              }}
             </Lightbox>
             <Spacer height={4} />
             <Flex justify="flex-end">

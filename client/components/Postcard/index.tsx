@@ -16,3 +16,6 @@ export const Postcard = (p: BoxProps) => (
     {...p}
   />
 )
+
+export { ImagePreview } from './ImagePreview'
+export { VideoPreview } from './VideoPreview'
