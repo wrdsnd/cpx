@@ -43,6 +43,7 @@ export class AuthResolver {
     const response = (context as any).res as Response
     response.cookie('session', session.sessionId, {
       httpOnly: true,
+      maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
     })
 
     return {
