@@ -1,10 +1,33 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import {
+  ApolloClient,
+  ApolloLink,
+  HttpLink,
+  InMemoryCache,
+} from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
+
+const errorLink = onError(({ graphQLErrors }) => {
+  if (graphQLErrors) {
+    const hasAuthError = graphQLErrors.some(
+      (error) => error.message === 'Unauthorized',
+    )
+
+    if (hasAuthError) {
+      localStorage?.clear()
+      client.resetStore()
+      window?.location.replace('/auth/login')
+    }
+  }
+}) as unknown as ApolloLink
 
 export const client = new ApolloClient({
   ssrMode: false,
-  link: new HttpLink({
-    uri: `/api/graphql`,
-    credentials: 'same-origin',
-  }),
+  link: ApolloLink.from([
+    errorLink,
+    new HttpLink({
+      uri: `/api/graphql`,
+      credentials: 'same-origin',
+    }),
+  ]),
   cache: new InMemoryCache(),
 })

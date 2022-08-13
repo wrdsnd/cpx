@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Request } from 'express'
@@ -18,13 +23,14 @@ export class AuthGuard implements CanActivate {
     const sessionId = request.cookies['session']
 
     if (!sessionId) {
-      return false
+      throw new UnauthorizedException()
     }
 
     const session = await this.sessionsRepository.findOne({ sessionId })
     if (session) {
       return true
     }
-    return false
+
+    throw new UnauthorizedException()
   }
 }
