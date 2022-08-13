@@ -1,5 +1,6 @@
 import {
   Button,
+  Container,
   Flex,
   FormControl,
   FormLabel,
@@ -18,12 +19,12 @@ const LoginPage = () => {
   const user = useUser()
 
   return (
-    <>
+    <Container width="100%" maxW={1060} px={4} margin="0 auto">
       <Head>
         <title>Login</title>
       </Head>
       <Flex justify="center" mt="24">
-        <VStack minW="sm" align="left">
+        <VStack minW={['100%', 'sm']} align="left">
           <Heading>Login</Heading>
           <Spacer h={4} />
           <FormControl>
@@ -60,7 +61,7 @@ const LoginPage = () => {
           </Button>
         </VStack>
       </Flex>
-    </>
+    </Container>
   )
 }
 
