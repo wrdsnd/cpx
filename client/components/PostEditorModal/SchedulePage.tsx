@@ -13,7 +13,6 @@ type SchedulePageFormValues = {
 
 type Props = {
   onSubmit: (v: SchedulePageFormValues) => void
-  isDraft: boolean
   initialDate: string
   initialTimeslotId: string
 }
@@ -22,7 +21,6 @@ export const SchedulePage = ({
   onSubmit,
   initialDate,
   initialTimeslotId,
-  isDraft,
 }: Props) => {
   const { data, loading } = useGetTimeslotsQuery()
 
@@ -37,13 +35,13 @@ export const SchedulePage = ({
   return (
     <Form<SchedulePageFormValues>
       initialValues={{
-        isDraft,
+        isDraft: false,
         scheduledOn: initialDate,
         timeslotId: initialTimeslotId,
       }}
       onSubmit={(v) => {
         if (v.isDraft) {
-          onSubmit({ isDraft, scheduledOn: null, timeslotId: null })
+          onSubmit({ isDraft: v.isDraft, scheduledOn: null, timeslotId: null })
         } else {
           onSubmit(v)
         }

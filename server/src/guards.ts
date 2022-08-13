@@ -26,7 +26,9 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException()
     }
 
-    const session = await this.sessionsRepository.findOne({ sessionId })
+    const session = await this.sessionsRepository.findOne({
+      where: { sessionId },
+    })
     if (session) {
       return true
     }

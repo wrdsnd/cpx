@@ -47,10 +47,6 @@ export class QueueResolver {
   ): Promise<Schema.Post> {
     const { sourceId, scheduledOn, timeslotId, isDraft } = input
 
-    const timeslot = await this.timeslotsRepository.findOne({
-      where: { id: timeslotId },
-    })
-
     const post = new Post()
 
     const media = input.media.map((m) => {
@@ -63,11 +59,14 @@ export class QueueResolver {
     post.content = input.text
     post.sourceId = sourceId
 
-    if (!isDraft) {
+    if (!isDraft && timeslotId && scheduledOn) {
+      const timeslot = await this.timeslotsRepository.findOne({
+        where: { id: timeslotId },
+      })
+
       post.timeslot = timeslot
       post.scheduledOn = scheduledOn
     }
-    post.sourceId = sourceId
 
     const savedPost = await this.postsRepository.save(post)
 
@@ -86,7 +85,7 @@ export class QueueResolver {
   @UseGuards(AuthGuard)
   @Mutation()
   async removeFromQueue(@Args('id') id: string) {
-    const post = await this.postsRepository.findOne({ id })
+    const post = await this.postsRepository.findOne({ where: { id } })
     await this.postsRepository.save({ ...post, deletedAt: new Date() })
     return true
   }
@@ -96,9 +95,11 @@ export class QueueResolver {
   async reschedule(@Args('input') input: Schema.RescheduleInput) {
     const { id, scheduledOn, timeslotId } = input
 
-    const post = await this.postsRepository.findOneOrFail({ id })
+    const post = await this.postsRepository.findOneOrFail({ where: { id } })
     const timeslot = await this.timeslotsRepository.findOneOrFail({
-      id: timeslotId,
+      where: {
+        id: timeslotId,
+      },
     })
 
     post.scheduledOn = scheduledOn

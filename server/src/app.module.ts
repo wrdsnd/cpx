@@ -12,12 +12,14 @@ import { PublisherModule } from './publisher/publisher.module'
 import { TwitterModule } from './twitter/twitter.module'
 import { DraftsModule } from './drafts/drafts.module'
 import { AuthModule } from './auth/auth.module'
+import { ApolloDriver } from '@nestjs/apollo'
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     GraphQLModule.forRoot({
+      driver: ApolloDriver,
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
         outputAs: 'class',
@@ -31,7 +33,20 @@ import { AuthModule } from './auth/auth.module'
       typePaths: [join(process.cwd(), 'src/schema.graphql')],
       context: ({ req, res }) => ({ req, res }),
     }),
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.TYPEORM_HOST,
+      port: (process.env.TYPEORM_PORT as unknown) as number,
+      database: process.env.TYPEORM_DATABASE,
+      username: process.env.TYPEORM_USERNAME,
+      password: process.env.TYPEORM_PASSWORD,
+      migrationsRun: true,
+      synchronize: false,
+      logging: ['schema', 'error', 'warn', 'info', 'log'],
+      entities: ['dist/**/*.entity.js'],
+      migrations: ['dist/migrations/postgresql/*.js'],
+      subscribers: ['.//subscriber/*.js'],
+    }),
     DraftsModule,
     QueueModule,
     FeedModule,

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { createQueryBuilder, Repository } from 'typeorm'
+import { Repository } from 'typeorm'
 import { Injectable, Logger } from '@nestjs/common'
 import { Cron } from '@nestjs/schedule'
 import { ConfigService } from '@nestjs/config'
@@ -65,7 +65,8 @@ export class PublisherService {
     const now = DateTime.local().setZone('Europe/Moscow')
 
     try {
-      const posts = await createQueryBuilder()
+      const posts = await this.postsRepository
+        .createQueryBuilder()
         .from(Post, 'post')
         .relation('media')
         .select('post')

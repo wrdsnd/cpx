@@ -18,7 +18,6 @@ gql`
   query GetPosts {
     feed {
       id
-      inQueue
       message
       user {
         name
@@ -69,7 +68,6 @@ const Feed = () => {
       </Head>
       {modalIsOpen && (
         <PostEditorModal
-          isDraft={false}
           isOpen={modalIsOpen}
           initialSourceUrl={sourceUrl}
           onClose={() => {

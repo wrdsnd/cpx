@@ -26,7 +26,7 @@ export class DraftsResolver {
   @UseGuards(AuthGuard)
   @Mutation()
   async saveAsDraft(@Args('input') input: SaveAsDraftInput) {
-    const post = await this.postsRepository.findOne({ id: input.id })
+    const post = await this.postsRepository.findOne({ where: { id: input.id } })
     return this.postsRepository.save({
       ...post,
       scheduledOn: null,

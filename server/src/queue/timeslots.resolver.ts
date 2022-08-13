@@ -27,7 +27,7 @@ export class TimeslotsResolver {
       relations: ['media'],
       where: {
         timeslotId: timeslot.id,
-        scheduledOn: input.date,
+        scheduledOn: new Date(input.date),
         deletedAt: IsNull(),
       },
     })

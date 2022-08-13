@@ -31,7 +31,9 @@ export class AuthResolver {
     @Context() context: GraphQLExecutionContext,
     @Args('input') input: LoginInput,
   ): Promise<LoginResult> {
-    const user = await this.userRepository.findOne({ email: input.email })
+    const user = await this.userRepository.findOne({
+      where: { email: input.email },
+    })
     const result = await compare(input.password, user.hash)
 
     const session = new Session()
