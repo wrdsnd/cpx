@@ -6,7 +6,7 @@
   "repository": "https://github.com/wrdsnd/cpx",
   "author": "Rainicorn.io",
   "scripts": {
-    "dev": "next",
+    "start:dev": "next",
     "build": "next build",
     "lint": "next lint",
     "build:analyze": "ANALYZE=enabled next build",
