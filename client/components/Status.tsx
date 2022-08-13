@@ -22,6 +22,7 @@ export const Loading = () => {
 
   return (
     <Text
+      role="progressbar"
       p={4}
       display="inline-block"
       sx={{ animation: `${spin} 1s ease infinite` }}
