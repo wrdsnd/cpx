@@ -320,7 +320,6 @@ export const Timetable = ({ selectedDate }: { selectedDate: DateTime }) => {
                   isOpen
                   initialTimelotId={timeslot.id}
                   initialDate={selectedDate.toISODate()}
-                  isDraft={false}
                   onClose={() => {
                     postModal.onClose()
                     setActiveTimeslotId(null)

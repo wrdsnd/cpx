@@ -6,12 +6,8 @@ import { Topbar } from './Topbar'
 
 type Props = {
   children: ReactNode
-  editorDefaultMode?: 'DRAFT' | 'QUEUE'
 }
-export const WorkspaceLayout = ({
-  editorDefaultMode = 'QUEUE',
-  children,
-}: Props) => {
+export const WorkspaceLayout = ({ children }: Props) => {
   const {
     isOpen: isEditorOpen,
     onClose: onEditorClose,
@@ -21,11 +17,7 @@ export const WorkspaceLayout = ({
   return (
     <Container width="100%" maxW={1060} px={4} margin="0 auto">
       {isEditorOpen && (
-        <PostEditorModal
-          isDraft={editorDefaultMode === 'DRAFT'}
-          isOpen={isEditorOpen}
-          onClose={onEditorClose}
-        />
+        <PostEditorModal isOpen={isEditorOpen} onClose={onEditorClose} />
       )}
       <Spacer height={5} />
       <Topbar onNewPostClick={onEditorOpen} />

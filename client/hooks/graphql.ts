@@ -130,7 +130,6 @@ export const GetPostDocument = gql`
   query GetPost($id: String!) {
     news(id: $id) {
       id
-      inQueue
       media {
         url
         type
@@ -819,7 +818,6 @@ export const GetPostsDocument = gql`
   query GetPosts {
     feed {
       id
-      inQueue
       message
       user {
         name

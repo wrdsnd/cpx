@@ -47,7 +47,6 @@ type Props = {
   initialDate?: string
   initialTimelotId?: string
   onClose: () => void
-  isDraft: boolean
 } & Pick<ModalProps, 'isOpen'>
 
 export const PostEditorModal = ({
@@ -56,7 +55,6 @@ export const PostEditorModal = ({
   initialSourceUrl,
   initialDate,
   initialTimelotId,
-  isDraft,
 }: Props) => {
   const toast = useToast()
 
@@ -134,7 +132,6 @@ export const PostEditorModal = ({
             <SchedulePage
               initialDate={initialDate}
               initialTimeslotId={initialTimelotId}
-              isDraft={isDraft}
               onSubmit={async ({ isDraft, scheduledOn, timeslotId }) => {
                 switch (source) {
                   case PostSource.URL: {
@@ -189,7 +186,6 @@ gql`
   query GetPost($id: String!) {
     news(id: $id) {
       id
-      inQueue
       media {
         url
         type

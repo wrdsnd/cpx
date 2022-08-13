@@ -88,7 +88,6 @@ export type MutationSendToQueueArgs = {
 export type News = {
   __typename?: 'News'
   id: Scalars['String']
-  inQueue: Scalars['Boolean']
   media: Array<TwitterMedia>
   message?: Maybe<Scalars['String']>
   user: TwitterUser
@@ -205,7 +204,6 @@ export type GetPostQuery = {
   news?: {
     __typename?: 'News'
     id: string
-    inQueue: boolean
     media: Array<{ __typename?: 'TwitterMedia'; url: string; type: MediaType }>
     user: { __typename?: 'TwitterUser'; name: string }
   } | null
@@ -424,7 +422,6 @@ export type GetPostsQuery = {
   feed?: Array<{
     __typename?: 'News'
     id: string
-    inQueue: boolean
     message?: string | null
     user: { __typename?: 'TwitterUser'; name: string }
     media: Array<{ __typename?: 'TwitterMedia'; url: string; type: MediaType }>

@@ -1,12 +1,12 @@
-FROM node:12-alpine
+FROM node:16-alpine
 
 WORKDIR /usr/app
 
-COPY ./server/package.json ./server/yarn.lock ./
-RUN yarn
+COPY ./server/package.json ./server/package-lock.json ./
+RUN npm ci
 
 COPY ./server ./
-RUN yarn build
+RUN npm run build
 
 EXPOSE 3000
 

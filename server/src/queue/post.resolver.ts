@@ -12,7 +12,7 @@ export class PostResolver {
 
   @Query()
   async post(@Args('id') id: string) {
-    return this.postsRepository.findOneOrFail({ id })
+    return this.postsRepository.findOneOrFail({ where: { id } })
   }
 
   @ResolveField()

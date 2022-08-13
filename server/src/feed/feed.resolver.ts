@@ -4,16 +4,12 @@ import { Repository } from 'typeorm'
 import { Logger, UseGuards } from '@nestjs/common'
 import { Subscription } from '../subscriptions/subscription.entity'
 import { TwitterService } from '../twitter/twitter.service'
-import { Post } from '../queue/post.entity'
 import { AuthGuard } from '../guards'
-import * as Schema from 'src/graphql'
+import * as Schema from '../graphql'
 
 @Resolver('Feed')
 export class FeedResolver {
   constructor(
-    @InjectRepository(Post)
-    private postsRepository: Repository<Post>,
-
     @InjectRepository(Subscription)
     private subscriptionsRepository: Repository<Subscription>,
 
@@ -22,12 +18,8 @@ export class FeedResolver {
 
   private readonly logger = new Logger(FeedResolver.name)
 
-  tweetToPost = async (tweet) => {
+  tweetToPost = async (tweet): Promise<Schema.News> => {
     const mediaEntities = tweet?.extended_entities?.media
-
-    const queueRecord = await this.postsRepository.findOne({
-      sourceId: tweet.id_str,
-    })
 
     const media: Schema.TwitterMedia[] = mediaEntities.map(
       (entity: any): Schema.TwitterMedia => {
@@ -50,7 +42,6 @@ export class FeedResolver {
 
     return {
       id: tweet.id_str,
-      inQueue: !!queueRecord,
       user: {
         name: tweet?.user?.screen_name,
       },

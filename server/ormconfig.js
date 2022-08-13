@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-module.exports = {
+const config = {
   type: 'postgres',
   host: process.env.TYPEORM_HOST,
   port: process.env.TYPEORM_PORT,
@@ -19,3 +19,6 @@ module.exports = {
     subscribersDir: './src/subscriber',
   },
 }
+
+
+module.exports = config
