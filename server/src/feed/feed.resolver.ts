@@ -18,56 +18,38 @@ export class FeedResolver {
 
   private readonly logger = new Logger(FeedResolver.name)
 
-  tweetToPost = async (tweet): Promise<Schema.News> => {
-    const mediaEntities = tweet?.extended_entities?.media
-
-    const media: Schema.TwitterMedia[] = mediaEntities.map(
-      (entity: any): Schema.TwitterMedia => {
-        switch (entity['type']) {
-          case 'animated_gif': {
-            return {
-              url: entity['video_info']['variants'][0].url,
-              type: Schema.MediaType.VIDEO,
-            }
-          }
-          default: {
-            return {
-              url: entity.media_url_https,
-              type: Schema.MediaType.IMAGE,
-            }
-          }
-        }
-      },
-    )
-
-    return {
-      id: tweet.id_str,
-      user: {
-        name: tweet?.user?.screen_name,
-      },
-      message: tweet.text,
-      media,
-    }
-  }
-
   @UseGuards(AuthGuard)
   @Query()
   async feed(): Promise<Schema.News[]> {
     const subscriptions = await this.subscriptionsRepository.find()
     const userIds = subscriptions.map((s) => s.userId)
 
-    const tweetsResponses: any[] = await Promise.all(
-      userIds.map((id) =>
-        this.twitterService.tweets(id).catch((err) => {
+    const tweetsResponses = await Promise.all(
+      userIds.map(async (id) => {
+        try {
+          const tweets = await this.twitterService.twitterClient.v1.userTimeline(
+            id,
+            {
+              exclude_replies: true,
+              count: 100,
+              // @ts-ignore
+              include_rts: false,
+              include_entities: true,
+            },
+          )
+
+          return tweets.data
+        } catch (err) {
           this.logger.warn(`Error while loading user ${id} tweets`, err)
-        }),
-      ),
-    ).then((results) => results.flat().filter((tweet) => tweet))
+        }
+      }),
+    )
 
     const results = tweetsResponses
+      .flat()
       .filter((tweet) => {
-        const extendedEntitiesMedia = tweet?.extended_entities?.media
-        return Boolean(extendedEntitiesMedia)
+        const hasMedia = !!tweet?.extended_entities?.media
+        return hasMedia
       })
       .sort((t1, t2) => {
         const t1Date = new Date(t1['created_at'])
@@ -83,7 +65,7 @@ export class FeedResolver {
 
         return 0
       })
-      .map(this.tweetToPost)
+      .map(this.twitterService.convertTweetToNews)
 
     return Promise.all(results)
   }
