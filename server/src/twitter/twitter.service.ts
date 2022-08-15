@@ -24,11 +24,19 @@ export class TwitterService {
     const mediaEntities = tweet?.extended_entities?.media
 
     const media: Schema.TwitterMedia[] = mediaEntities.map(
-      (entity: any): Schema.TwitterMedia => {
-        switch (entity['type']) {
+      (entity): Schema.TwitterMedia => {
+        switch (entity.type) {
+          case 'video':
           case 'animated_gif': {
+            const variants = entity.video_info.variants.filter(
+              (v) => v.content_type === 'video/mp4',
+            )
+
+            const [firstVariant] = variants
+            const [urlWithoutQuery] = firstVariant.url.split('?')
+
             return {
-              url: entity['video_info']['variants'][0].url,
+              url: urlWithoutQuery,
               type: Schema.MediaType.VIDEO,
             }
           }
