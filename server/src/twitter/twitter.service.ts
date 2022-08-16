@@ -28,9 +28,19 @@ export class TwitterService {
         switch (entity.type) {
           case 'video':
           case 'animated_gif': {
-            const variants = entity.video_info.variants.filter(
-              (v) => v.content_type === 'video/mp4',
-            )
+            const variants = entity.video_info.variants
+              .filter((v) => v.content_type === 'video/mp4')
+              .sort((v1, v2) => {
+                if (v1.bitrate < v2.bitrate) {
+                  return 1
+                }
+
+                if (v1.bitrate > v2.bitrate) {
+                  return -1
+                }
+
+                return 0
+              })
 
             const [firstVariant] = variants
             const [urlWithoutQuery] = firstVariant.url.split('?')
