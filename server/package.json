@@ -49,7 +49,7 @@
     "typeorm": "^0.3.7"
   },
   "devDependencies": {
-    "@nestjs/cli": "^9.0.0",
+    "@nestjs/cli": "^9.1.8",
     "@nestjs/schematics": "^9.0.1",
     "@nestjs/testing": "^9.0.9",
     "@types/bcrypt": "^5.0.0",
@@ -69,7 +69,7 @@
     "ts-jest": "^28.0.7",
     "ts-loader": "^8.0.8",
     "ts-node": "10.9.1",
-    "tsconfig-paths": "^3.9.0",
+    "tsconfig-paths": "^3.14.1",
     "typescript": "4.7.4"
   },
   "jest": {
