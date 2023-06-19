@@ -110,6 +110,7 @@ export type Query = {
   __typename?: 'Query'
   drafts?: Maybe<Array<Maybe<Post>>>
   feed?: Maybe<Array<Maybe<News>>>
+  likes: Array<News>
   news?: Maybe<News>
   post: Post
   queue?: Maybe<Array<Maybe<Post>>>
@@ -426,6 +427,19 @@ export type GetPostsQuery = {
     user: { __typename?: 'TwitterUser'; name: string }
     media: Array<{ __typename?: 'TwitterMedia'; url: string; type: MediaType }>
   } | null> | null
+}
+
+export type GetLikesQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetLikesQuery = {
+  __typename?: 'Query'
+  likes: Array<{
+    __typename?: 'News'
+    id: string
+    message?: string | null
+    user: { __typename?: 'TwitterUser'; name: string }
+    media: Array<{ __typename?: 'TwitterMedia'; url: string; type: MediaType }>
+  }>
 }
 
 export type LoginMutationVariables = Exact<{

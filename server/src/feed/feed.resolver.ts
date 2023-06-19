@@ -20,6 +20,13 @@ export class FeedResolver {
 
   @UseGuards(AuthGuard)
   @Query()
+  async likes(): Promise<Schema.News[]> {
+    const likes = await this.twitterService.twitterClient.v1.favoriteTimelineByUsername("endless_cat");
+    return Promise.all(likes.data.map(this.twitterService.convertTweetToNews))
+  }
+
+  @UseGuards(AuthGuard)
+  @Query()
   async feed(): Promise<Schema.News[]> {
     const subscriptions = await this.subscriptionsRepository.find()
     const userIds = subscriptions.map((s) => s.userId)

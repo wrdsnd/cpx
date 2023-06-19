@@ -16,6 +16,7 @@ type Query {
   queue: [Post]
   drafts: [Post]
   timeslots: [Timeslot]
+  likes: [News!]!
 }
 
 type Mutation {
