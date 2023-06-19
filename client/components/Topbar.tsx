@@ -27,9 +27,9 @@ export const Topbar = ({ onNewPostClick }: TopbarProps) => {
       isActive: boolean
     }[] => [
       {
-        label: 'Feed',
-        href: '/feed',
-        isActive: router.pathname === '/feed',
+        label: 'Likes',
+        href: '/likes',
+        isActive: router.pathname === '/likes',
       },
       {
         label: 'Queue',

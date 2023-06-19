@@ -55,6 +55,8 @@ export abstract class IQuery {
     abstract drafts(): Nullable<Nullable<Post>[]> | Promise<Nullable<Nullable<Post>[]>>;
 
     abstract timeslots(): Nullable<Nullable<Timeslot>[]> | Promise<Nullable<Nullable<Timeslot>[]>>;
+
+    abstract likes(): News[] | Promise<News[]>;
 }
 
 export abstract class IMutation {

@@ -877,6 +877,69 @@ export type GetPostsQueryResult = Apollo.QueryResult<
   Types.GetPostsQuery,
   Types.GetPostsQueryVariables
 >
+export const GetLikesDocument = gql`
+  query GetLikes {
+    likes {
+      id
+      message
+      user {
+        name
+      }
+      media {
+        url
+        type
+      }
+    }
+  }
+`
+
+/**
+ * __useGetLikesQuery__
+ *
+ * To run a query within a React component, call `useGetLikesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLikesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLikesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLikesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    Types.GetLikesQuery,
+    Types.GetLikesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<Types.GetLikesQuery, Types.GetLikesQueryVariables>(
+    GetLikesDocument,
+    options,
+  )
+}
+export function useGetLikesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    Types.GetLikesQuery,
+    Types.GetLikesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<Types.GetLikesQuery, Types.GetLikesQueryVariables>(
+    GetLikesDocument,
+    options,
+  )
+}
+export type GetLikesQueryHookResult = ReturnType<typeof useGetLikesQuery>
+export type GetLikesLazyQueryHookResult = ReturnType<
+  typeof useGetLikesLazyQuery
+>
+export type GetLikesQueryResult = Apollo.QueryResult<
+  Types.GetLikesQuery,
+  Types.GetLikesQueryVariables
+>
 export const LoginDocument = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
