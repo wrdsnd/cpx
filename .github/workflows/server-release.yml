@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "server/**"
+  workflow_dispatch:
+
 defaults:
   run:
     working-directory: ./server
@@ -13,7 +15,7 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
